@@ -63,9 +63,9 @@ bash scripts/usenala
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 # https://www.linux.com/training-tutorials/how-install-and-use-flatpak-linux/
 # install dir /var/lib/flatpak/app/ # config store ~/.var/app/
-flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
+# flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
 flatpak install -y flathub com.github.IsmaelMartinez.teams_for_linux
-flatpak install -y flathub com.google.AndroidStudio
+# flatpak install -y flathub com.google.AndroidStudio
 flatpak install -y flathub com.brave.Browser 
 
 # Install java-17-amazon-corretto
