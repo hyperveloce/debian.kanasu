@@ -2,4 +2,4 @@
 
 
 
-#  apt install --no-install-recommends xfce4 xserver-xorg
+#  apt install --no-install-recommends xfce4 xserver-xorg xfce4-goodies lightdm
