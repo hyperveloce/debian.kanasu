@@ -84,3 +84,9 @@ cp dwm.desktop /usr/share/xsessions
 cd $builddir
 
 TO DO: set flatpak to shutdown gracefully
+
+
+https://www.youtube.com/watch?v=0QwFLcGs-is
+https://github.com/MinersWin/10-things-to-do-AFTER-Installing-DEBIAN-LINUX
+https://github.com/b-sullender/debian12setup/blob/main/install.sh
+https://www.youtube.com/watch?v=i379EV4pjMk
