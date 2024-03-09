@@ -34,28 +34,34 @@ cd $builddir
 #mv user-dirs.dirs /home/$username/.config
 chown -R $username:$username /home/$username
 
+# Install NVIDIA
+deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
+apt install nvidia-driver firmware-misc-nonfree
+
 # Install nala
 apt install nala -y
 
 # Installing Essential Programs 
-nala install feh kitty rofi picom thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier lightdm git -y
+nala install feh kitty rofi picom thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git -y
 
 # Installing Other less important Programs
 nala install neofetch flameshot vim  papirus-icon-theme fonts-noto-color-emoji -y
 
-apt -y purge libreoffice*
-apt purge iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk
+# Installing light OS
+# nala install lightdm
 
-apt autoremove
+# apt -y purge libreoffice*
+# apt purge iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk
 
-# Enable graphical login and change target from CLI to GUI
-systemctl enable lightdm
-systemctl set-default graphical.target
+# apt autoremove
+
+# # Enable graphical login and change target from CLI to GUI
+# systemctl enable lightdm
+# systemctl set-default graphical.target
 
 # Enable wireplumber audio service
 
 sudo -u $username systemctl --user enable wireplumber.service
-
 
 # Use nala
 bash scripts/usenala
@@ -63,10 +69,11 @@ bash scripts/usenala
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 # https://www.linux.com/training-tutorials/how-install-and-use-flatpak-linux/
 # install dir /var/lib/flatpak/app/ # config store ~/.var/app/
-# flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
+
 flatpak install -y flathub com.github.IsmaelMartinez.teams_for_linux
-# flatpak install -y flathub com.google.AndroidStudio
 flatpak install -y flathub com.brave.Browser 
+# flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
+# flatpak install -y flathub com.google.AndroidStudio
 
 # Install java-17-amazon-corretto
 deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
