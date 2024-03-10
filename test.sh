@@ -74,6 +74,8 @@ flatpak install -y flathub com.github.IsmaelMartinez.teams_for_linux
 flatpak install -y flathub com.brave.Browser 
 # flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
 # flatpak install -y flathub com.google.AndroidStudio
+# flatpak install -y flathub io.github.mimbrero.WhatsAppDesktop
+
 
 # Install java-17-amazon-corretto
 deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
