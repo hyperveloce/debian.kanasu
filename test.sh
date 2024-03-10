@@ -12,7 +12,7 @@
 ##Move home directory
 #  #lsblk - find drive to mount
 #sudo mkdir -p /mnt/home
-#sudo mount /dev/sda2 /mnt/home
+#sudo mount /dev/sdb2 /mnt/home
 #sudo df -Th
 #sudo cp -aR /home/* /mnt/home
 #ls -larth /mnt/home/kanasu
