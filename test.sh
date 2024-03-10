@@ -42,7 +42,7 @@ apt install nvidia-driver firmware-misc-nonfree
 apt install nala -y
 
 # Installing Essential Programs 
-nala install feh kitty rofi picom thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git synaptic-y
+nala install feh kitty rofi picom thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic-y
 
 # Installing Other less important Programs
 nala install neofetch flameshot vim  papirus-icon-theme fonts-noto-color-emoji -y
