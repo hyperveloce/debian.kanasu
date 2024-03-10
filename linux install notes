@@ -25,20 +25,15 @@ sudo mount -t cifs //192.168.50.2/k_Cinema /mnt/
 //192.168.50.200/piusb /mnt/pi cifs rw,username=pi,password=Kanasu1612,forceuid,forcegid 0 1
 
 
-$HOME/.local/share/applications/
+$HOME/.local/share/applications
+
 
 Research --
-https://christitus.com/the-perfect-system/
-
 https://github.com/ChrisTitusTech/Debian-titus
 https://github.com/drewgrif/bookworm-scripts
 https://github.com/drewgrif/dotfiles
-https://github.com/prasanthrangan/hyprdots
-https://github.com/Edesem/Suckless
-https://github.com/elkowar/eww
-
-https://wiki.hyprland.org/Useful-Utilities/Must-have/#:~:text=This%20page%20documents%20software%20that,take%20care%20of%20this%20automatically.
-that may as well be a tiling window manager. i know a lot of people bash on gnome, but it has the best wayland support, it's best for touchscreens, and it's consistent (especially if you use the adw-gtk3 theme for gtk2/3 apps)
+https://github.com/b-sullender/debian12setup/blob/main/install.sh
+https://github.com/sudorook/debian
 
 
 ##################################################################
@@ -76,26 +71,16 @@ cd mybash
 bash setup.sh
 cd $builddir
 
-# DWM Setup
-git clone https://github.com/ChrisTitusTech/dwm-titus
-cd dwm-titus
-make clean install
-cp dwm.desktop /usr/share/xsessions
-cd $builddir
+sudo nano /etc/default/grub
+Change the delay value to 0 seconds, by setting GRUB_TIMEOUT=0:
+
+
 
 TO DO: set flatpak to shutdown gracefully
 
 
-https://www.youtube.com/watch?v=0QwFLcGs-is
-https://github.com/MinersWin/10-things-to-do-AFTER-Installing-DEBIAN-LINUX
-https://github.com/b-sullender/debian12setup/blob/main/install.sh
-https://www.youtube.com/watch?v=i379EV4pjMk
-https://www.reddit.com/r/gnome/comments/7dv1m6/poly_bar_with_gnome/
-https://github.com/sudorook/debian
 
-Gnome rice
-https://www.youtube.com/watch?v=SxKUcyO-YFk
-https://www.reddit.com/r/unixporn/comments/sopwqd/gnome_using_debian_for_my_first_rice/
-https://www.reddit.com/r/unixporn/comments/s4gy9q/gnome_my_first_rice/
 
-https://www.youtube.com/watch?v=SxKUcyO-YFk
+
+
+
