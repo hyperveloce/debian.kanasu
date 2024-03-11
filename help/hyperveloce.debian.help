@@ -26,9 +26,7 @@ git push
 ssh-add ~/.ssh/id_rsa
 
 ###GIT Use
-
 git reset --hard HEAD
-
 
 ### git mount
 mount: https://www.linode.com/docs/guides/linux-mount-smb-share/
@@ -37,10 +35,8 @@ sudo mount -t cifs //192.168.50.2/k_Cinema /mnt/
 
 //192.168.50.200/piusb /mnt/pi cifs rw,username=pi,password=12123,forceuid,forcegid 0 1
 
-
 ###Postman
 https://gist.github.com/pmkay/75faa1b926ba06416d0e44a29a584940
-
 
 ###JAVA17
 kanasu@hyperveloce:~$ which java
