@@ -1,86 +1,9 @@
-
-
-https://www.youtube.com/watch?v=UyDYSBLLM4M
-https://www.nordtheme.com/ports
-
-#install docker
-https://linuxiac.com/how-to-install-docker-on-debian-12-bookworm/
-https://phoenixnap.com/kb/docker-permission-denied
-https://www.baeldung.com/linux/docker-permission-denied-daemon-socket-error
-#docker cleanup
-
-
-
-##set my exports
-https://linuxconfig.org/how-to-locate-and-set-java-home-directory-on-linux
-
-Postman install
-https://gist.github.com/pmkay/75faa1b926ba06416d0e44a29a584940
-
-
-mount: https://www.linode.com/docs/guides/linux-mount-smb-share/
-sudo mount -t cifs //192.168.50.2/k_media /mnt/
-sudo mount -t cifs //192.168.50.2/k_Cinema /mnt/
-
-//192.168.50.200/piusb /mnt/pi cifs rw,username=pi,password=Kanasu1612,forceuid,forcegid 0 1
-
-
-$HOME/.local/share/applications
-
-
 Research --
-https://github.com/ChrisTitusTech/Debian-titus
-https://github.com/drewgrif/bookworm-scripts
-https://github.com/drewgrif/dotfiles
-https://github.com/b-sullender/debian12setup/blob/main/install.sh
-https://github.com/sudorook/debian
-
-
+https://github.com/catppuccin/catppuccin
+    https://github.com/catppuccin/kitty
 ##################################################################
-
-
-# Download Nordic Theme
-cd /usr/share/themes/
-git clone https://github.com/EliverLara/Nordic.git
-
-# Installing fonts
-cd $builddir 
-nala install fonts-font-awesome -y
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-unzip FiraCode.zip -d /home/$username/.fonts
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Meslo.zip
-unzip Meslo.zip -d /home/$username/.fonts
-mv dotfonts/fontawesome/otfs/*.otf /home/$username/.fonts/
-chown $username:$username /home/$username/.fonts/*
-
-# Reloading Font
-fc-cache -vf
-# Removing zip Files
-rm ./FiraCode.zip ./Meslo.zip
-
-# Install Nordzy cursor
-git clone https://github.com/alvatip/Nordzy-cursors
-cd Nordzy-cursors
-./install.sh
-cd $builddir
-rm -rf Nordzy-cursors
-
-# Beautiful bash
-git clone https://github.com/ChrisTitusTech/mybash
-cd mybash
-bash setup.sh
-cd $builddir
 
 sudo nano /etc/default/grub
 Change the delay value to 0 seconds, by setting GRUB_TIMEOUT=0:
 
-
-
 TO DO: set flatpak to shutdown gracefully
-
-
-
-
-
-
-
