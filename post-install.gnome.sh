@@ -40,15 +40,15 @@ chown -R $username:$username /home/$username
 # ----- INSTALL Debian APT AVAILABLE SOFTWARE ----- #
 # ------------------------------------------------- #
 
-# Install nala
-apt install nala -y
+# # Install nala
+# apt install nala -y
 
 # Installing Essential Programs
-nala install feh kitty rofi thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome
+apt install feh kitty rofi thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome
  -y
 
 # Installing Other less important Programs
-nala install neofetch flameshot neovim vim papirus-icon-theme fonts-noto-color-emoji -y
+apt install neofetch flameshot neovim vim papirus-icon-theme fonts-noto-color-emoji -y
 
 # # Packages needed for window manager installation
 # sudo apt install -y picom rofi dunst libnotify-bin unzip wmctrl xdotool
@@ -62,7 +62,7 @@ git clone https://github.com/EliverLara/Nordic.git
 
 # Installing fonts
 cd $builddir
-nala install fonts-font-awesome -y
+apt install fonts-font-awesome -y
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
 unzip FiraCode.zip -d /home/$username/.fonts
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Meslo.zip
@@ -86,8 +86,8 @@ rm -rf Nordzy-cursors
 sudo -u $username systemctl --user enable wireplumber.service
 apt autoremove
 
-# Use nala
-bash scripts/usenala
+# # Use nala
+# bash scripts/usenala
 
 # -------------------------------------- #
 # ----- FLATPAK ----- #
@@ -106,14 +106,14 @@ flatpak install -y flathub com.mastermindzh.tidal-hifi
 
 # Install NVIDIA
 deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
-nala update
-nala install nvidia-driver firmware-misc-nonfree -y
+apt update
+apt install nvidia-driver firmware-misc-nonfree -y
 
 # Install java-17-amazon-corretto -- https://linuxconfig.org/how-to-locate-and-set-java-home-directory-on-linux
 wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg && \
 echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
-nala update
-nala install java-17-amazon-corretto-jdk -y
+apt update
+apt install java-17-amazon-corretto-jdk -y
 
 
 sudo apt autoremove
