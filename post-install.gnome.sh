@@ -44,7 +44,7 @@ chown -R $username:$username /home/$username
 # apt install nala -y
 
 # Installing Essential Programs
-apt install feh kitty rofi thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome
+apt install feh kitty rofi thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome
  -y
 
 # Installing Other less important Programs
