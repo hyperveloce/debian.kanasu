@@ -17,11 +17,8 @@ builddir=$(pwd)
 #sudo cp -aR /home/* /mnt/home
 #ls -larth /mnt/home/kanasu
 
-
 # System updates
-sudo apt -y update
-sudo apt -y upgrade
-sudo apt -y dist-upgrade
+sudo apt -y update && sudo apt -y upgrade && sudo apt -y dist-upgrade
 
 
 
@@ -100,11 +97,12 @@ flatpak install -y flathub com.brave.Browser
 flatpak install -y flathub io.github.mimbrero.WhatsAppDesktop
 flatpak install -y flathub io.atom.Atom
 flatpak install -y flathub com.mastermindzh.tidal-hifi
+# flatpak install -y flathub com.visualstudio.code
 # flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
 # flatpak install -y flathub com.google.AndroidStudio
 
 
-# Install NVIDIA
+# Install NVIDIA --> /etc/apt/sources.list
 deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
 apt update
 apt install nvidia-driver firmware-misc-nonfree -y
