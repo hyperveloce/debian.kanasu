@@ -6,9 +6,9 @@ iatest=$(expr index "$-" i)
 #######################################################
 
 # Source global definitions
-# if [ -f /etc/bashrc ]; then
-# 	 . /etc/bashrc
-# fi
+ if [ -f /etc/bashrc ]; then
+ 	 . /etc/bashrc
+ fi
 
 # Enable bash programmable completion features in interactive shells
 if [ -f /usr/share/bash-completion/bash_completion ]; then

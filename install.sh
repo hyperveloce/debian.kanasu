@@ -9,18 +9,27 @@ fi
 username=$(id -u -n 1000)
 builddir=$(pwd)
 
-##Move home directory
-#  #lsblk - find drive to mount
+# ##Move home directory -- lsblk -f
+# sudo mkdir /mnt/w.System
+# sudo mount /dev/nvme0n1p2 /mnt/w.System
+# sudo mkdir /mnt/b.System
+# sudo mount /dev/nvme1n1p1 /mnt/b.System
+# sudo mkdir /mnt/hyper.space
+# sudo mount /dev/sdb2 /mnt/hyper.space
+# sudo mkdir /mnt/kanasu.space
+# sudo mount /dev/sda3 /mnt/kanasu.space
+
 #sudo mkdir -p /mnt/home
 #sudo mount /dev/sdb2 /mnt/home
+sudo mount /dev/sda1 /mnt/home
 #sudo df -Th
 #sudo cp -aR /home/* /mnt/home
 #ls -larth /mnt/home/kanasu
+#sudo vim /etc/fstab
+#UUID=<noted number from above>    /home    ext4    defaults   0  2
 
 # System updates
 sudo apt -y update && sudo apt -y upgrade && sudo apt -y dist-upgrade
-
-
 
 # Making .config and Moving config files and background to Pictures
 cd $builddir
@@ -41,16 +50,16 @@ chown -R $username:$username /home/$username
 apt install nala -y
 
 # Installing Essential Programs
-apt install feh kitty rofi thunar nitrogen x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome
+apt install feh kitty thunar x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome
  -y
 
 # Installing Other less important Programs
 apt install neofetch flameshot neovim vim papirus-icon-theme fonts-noto-color-emoji -y
 
 # # Packages needed for window manager installation
-# sudo apt install -y picom rofi dunst libnotify-bin unzip wmctrl xdotool
+# sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
 
-# apt -y purge libreoffice*
+# apt purge libreoffice* -y
 # apt purge iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk firefox-esr
 
 # Download Nordic Theme
@@ -60,15 +69,10 @@ apt install neofetch flameshot neovim vim papirus-icon-theme fonts-noto-color-em
 # Installing fonts
 cd $builddir
 apt install fonts-font-awesome -y
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Meslo.zip
-unzip Meslo.zip -d /home/$username/.fonts
-mv dotfonts/fontawesome/otfs/*.otf /home/$username/.fonts/
+cp -R fonts/* /home/$username/.fonts/
 chown $username:$username /home/$username/.fonts/*
-
 # Reloading Font
 fc-cache -vf
-# Removing zip Files
-rm ./FiraCode.zip ./Meslo.zip
 
 # Install Nordzy cursor
 #git clone https://github.com/alvatip/Nordzy-cursors
@@ -104,22 +108,20 @@ flatpak install -y flathub com.mastermindzh.tidal-hifi
 # flatpak install -y flathub com.google.AndroidStudio
 
 
-# Install NVIDIA --> /etc/apt/sources.list
-deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
-apt update
-apt install nvidia-driver firmware-misc-nonfree -y
-
-# Install java-17-amazon-corretto -- https://linuxconfig.org/how-to-locate-and-set-java-home-directory-on-linux
-wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg && \
-echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
-apt update
-apt install java-17-amazon-corretto-jdk -y
-
-sudo apt autoremove
+# # Install NVIDIA --> /etc/apt/sources.list
+# deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
+# apt update
+# apt install nvidia-driver firmware-misc-nonfree -y
+#
+# # Install java-17-amazon-corretto -- https://linuxconfig.org/how-to-locate-and-set-java-home-directory-on-linux
+# wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg && \
+# echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
+# apt update
+# apt install java-17-amazon-corretto-jdk -y
 
 printf "\e[1;32mYour system is ready and will go for reboot! Thanks you.\e[0m\n"
 
-systemctl rebootD
+systemctl reboot
 
 ### Reference --
 ### https://github.com/ChrisTitusTech/Debian-titus

@@ -53,7 +53,7 @@ checkEnv() {
         echo -e "${RED}You need to be a member of the sudo group to run me!"
         exit 1
     fi
-    
+
 }
 
 installDepend() {
@@ -69,7 +69,7 @@ installDepend() {
             echo "Command yay already installed"
         fi
     	yay --noconfirm -S ${DEPENDENCIES}
-    else 
+    else
     	sudo ${PACKAGER} install -yq ${DEPENDENCIES}
     fi
 }
@@ -101,7 +101,7 @@ linkConfig() {
 
     echo -e "${YELLOW}Linking new bash config file...${RC}"
     ## Make symbolic link.
-    ln -svf ${GITPATH}/scripts/.bashrc ${USER_HOME}/.bashrc
+    ln -svf ${GITPATH}/.bashrc ${USER_HOME}/.bashrc
     ln -svf ${GITPATH}/starship.toml ${USER_HOME}/.config/starship.toml
     ln -svf ${GITPATH}/neofetchConfig.conf ${USER_HOME}/.config/neofetch.conf
     ln -svf ${GITPATH}/kitty/current-theme.conf ${USER_HOME}/.config/kitty/current-theme.conf
