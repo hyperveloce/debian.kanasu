@@ -104,6 +104,7 @@ linkConfig() {
     ln -svf ${GITPATH}/.bashrc ${USER_HOME}/.bashrc
     ln -svf ${GITPATH}/starship.toml ${USER_HOME}/.config/starship.toml
     ln -svf ${GITPATH}/neofetchConfig.conf ${USER_HOME}/.config/neofetch.conf
+    mkdir ${USER_HOME}/.config/kitty
     ln -svf ${GITPATH}/kitty/current-theme.conf ${USER_HOME}/.config/kitty/current-theme.conf
     ln -svf ${GITPATH}/kitty/kitty.conf ${USER_HOME}/.config/kitty/kitty.conf
     ln -svf ${GITPATH}/kitty/theme.conf ${USER_HOME}/.config/kitty/theme.conf
