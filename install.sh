@@ -50,17 +50,17 @@ chown -R $username:$username /home/$username
 apt install nala -y
 
 # Installing Essential Programs
-apt install feh kitty thunar x11-xserver-utils unzip wget pipewire wireplumber pavucontrol build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome
+apt install feh kitty thunar x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome
  -y
 
 # Installing Other less important Programs
-apt install neofetch flameshot neovim vim papirus-icon-theme fonts-noto-color-emoji -y
+apt install chromium neofetch neovim vim papirus-icon-theme fonts-noto-color-emoji -y
 
 # # Packages needed for window manager installation
 # sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
 
-# apt purge libreoffice* -y
-# apt purge iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk firefox-esr
+apt purge libreoffice* -y
+apt gnome-contacts rhythmbox purge cheese iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk firefox-esr evolution -y
 
 # Download Nordic Theme
 #cd /usr/share/themes/
@@ -99,7 +99,6 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 # install dir /var/lib/flatpak/app/ # config store ~/.var/app/
 flatpak install -y flathub com.github.IsmaelMartinez.teams_for_linux
 flatpak install -y flathub io.github.realmazharhussain.GdmSettings
-flatpak install -y flathub com.brave.Browser
 flatpak install -y flathub io.github.mimbrero.WhatsAppDesktop
 flatpak install -y flathub io.atom.Atom
 flatpak install -y flathub com.mastermindzh.tidal-hifi
@@ -129,10 +128,6 @@ systemctl reboot
 
 ########################################################################################################################
 ########################################################################################################################
-
-# # Quick Emulator & Virtual Machine Manager
-# sudo apt install -y qemu-system virt-manager
-
 
 
 # ----- Google Chrome ----- #
@@ -192,7 +187,3 @@ systemctl reboot
 # #   gsettings get org.gnome.shell favorite-apps
 # gsettings set org.gnome.shell favorite-apps "['org.gnome.Terminal.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'org.gnome.Nautilus.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
 #
-
-### Gaming emulator
-# sudo apt install -y fceux
-# sudo apt install -y
