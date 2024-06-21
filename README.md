@@ -7,5 +7,5 @@ Debian customizations from kanasu
 git clone https://github.com/hyperveloce/debian.kanasu
 cd debian.kanasu
 sudo su
-sudo ./post-install.gnome.sh
+sudo ./install.sh
 ```
