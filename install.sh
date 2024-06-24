@@ -20,12 +20,12 @@ builddir=$(pwd)
 # sudo mount /dev/sda3 /mnt/kanasu.space
 
 #sudo mkdir -p /mnt/home
-#sudo mount /dev/sdb2 /mnt/home
+#sudo mount /dev/sda2 /mnt/home
 #sudo df -Th
 #sudo cp -aR /home/* /mnt/home
-#sudo umount /dev/sdb2
-#sudo mount /dev/sdb2 /home
-#sudo blkid /dev/sdb2
+#sudo umount /dev/sda2
+#sudo mount /dev/sda2 /home
+#sudo blkid /dev/sda2
 #sudo vim /etc/fstab
 #UUID=<noted number from above>    /home    ext4    defaults   0  2
 
