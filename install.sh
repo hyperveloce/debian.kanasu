@@ -21,10 +21,11 @@ builddir=$(pwd)
 
 #sudo mkdir -p /mnt/home
 #sudo mount /dev/sdb2 /mnt/home
-sudo mount /dev/sda1 /mnt/home
 #sudo df -Th
 #sudo cp -aR /home/* /mnt/home
-#ls -larth /mnt/home/kanasu
+#sudo umount /dev/sdb2
+#sudo mount /dev/sdb2 /home
+#sudo blkid /dev/sdb2
 #sudo vim /etc/fstab
 #UUID=<noted number from above>    /home    ext4    defaults   0  2
 
