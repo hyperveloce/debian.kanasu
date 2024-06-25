@@ -32,10 +32,11 @@ sudo apt update && sudo apt upgrade
 cd $builddir
 mkdir -p /home/$username/.config
 mkdir -p /home/$username/.fonts
+mkdir -p /home/$username/.themes
 mkdir -p /home/$username/Pictures
-mkdir -p /home/$username/Pictures/backgrounds
+mkdir -p /home/$username/Pictures/bg
 cp -R dotconfig/* /home/$username/.config/
-cp bg.jpg /home/$username/Pictures/backgrounds/
+cp bg.jpg /home/$username/Pictures/bg/
 mv user-dirs.dirs /home/$username/.config
 chown -R $username:$username /home/$username
 
@@ -104,6 +105,7 @@ flatpak install -y flathub io.github.realmazharhussain.GdmSettings
 flatpak install -y flathub io.github.mimbrero.WhatsAppDesktop
 flatpak install -y flathub io.atom.Atom
 flatpak install -y flathub com.mastermindzh.tidal-hifi
+flatpak install -y flathub hu.irl.cameractrls
 # flatpak install -y flathub com.visualstudio.code
 # flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
 # flatpak install -y flathub com.google.AndroidStudio
@@ -130,7 +132,7 @@ apt install brave-browser
 # ----- Set favorite-apps ----- #
 # Use the following the get your favorite apps list
 gsettings get org.gnome.shell favorite-apps
-gsettings set org.gnome.shell favorite-apps "['thunar.desktop', 'kitty.desktop', 'chromium.desktop', 'brave-browser.desktop']"
+gsettings set org.gnome.shell favorite-apps "['thunar.desktop', 'kitty.desktop', 'chromium.desktop', 'brave-browser.desktop', 'io.atom.Atom.desktop', 'com.mastermindzh.tidal-hifi.desktop', 'io.github.mimbrero.WhatsAppDesktop.desktop']"
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
 cp bg/bg.jpg /home/kanasu/Pictures/bg/
