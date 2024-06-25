@@ -9,28 +9,25 @@ fi
 username=$(id -u -n 1000)
 builddir=$(pwd)
 
-# ##Move home directory -- lsblk -f
-# sudo mkdir /mnt/w.System
-# sudo mount /dev/nvme0n1p2 /mnt/w.System
-# sudo mkdir /mnt/b.System
-# sudo mount /dev/nvme1n1p1 /mnt/b.System
-# sudo mkdir /mnt/hyper.space
-# sudo mount /dev/sdb2 /mnt/hyper.space
-# sudo mkdir /mnt/kanasu.space
-# sudo mount /dev/sda3 /mnt/kanasu.space
-
 #sudo mkdir -p /mnt/home
-#sudo mount /dev/sda2 /mnt/home
+#sudo mount /dev/sdb2 /mnt/home
 #sudo df -Th
 #sudo cp -aR /home/* /mnt/home
-#sudo umount /dev/sda2
-#sudo mount /dev/sda2 /home
-#sudo blkid /dev/sda2
+#sudo umount /dev/sdb2
+#sudo mount /dev/sdb2 /home
+#sudo blkid /dev/sdb2
 #sudo vim /etc/fstab
-#UUID=<noted number from above>    /home    ext4    defaults   0  2
+#UUID=7ddfdaed-95fe-4f25-9e64-37cb0b541404    /home    ext4    defaults   0  2
+#echo "UUID=7ddfdaed-95fe-4f25-9e64-37cb0b541404    /home    ext4    defaults   0  2" | sudo tee /etc/fstab
+
+#sudo blkid -f
+# echo "UUID=CC0889CD0889B74C    /mnt/m.2    ntfs    defaults   0  2" | sudo tee /etc/fstab
+# echo "UUID=CE7EA4717EA4544D    /mnt/w.System    ntfs    defaults   0  2" | sudo tee /etc/fstab
+# echo "UUID=543022F1761BF872    /mnt/kanasu.space    ntfs    defaults   0  2" | sudo tee /etc/fstab
+
 
 # System updates
-sudo apt -y update && sudo apt -y upgrade && sudo apt -y dist-upgrade
+sudo apt update && sudo apt upgrade
 
 # Making .config and Moving config files and background to Pictures
 cd $builddir
@@ -51,8 +48,7 @@ chown -R $username:$username /home/$username
 apt install nala -y
 
 # Installing Essential Programs
-apt install feh kitty thunar x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier git remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome
- -y
+apt install feh kitty thunar curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome -y
 
 # Installing Other less important Programs
 apt install chromium neofetch neovim vim papirus-icon-theme fonts-noto-color-emoji -y
@@ -61,11 +57,8 @@ apt install chromium neofetch neovim vim papirus-icon-theme fonts-noto-color-emo
 # sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
 
 apt purge libreoffice* -y
-apt gnome-contacts rhythmbox purge cheese iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk firefox-esr evolution -y
+apt purge gnome-contacts rhythmbox purge cheese iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk firefox-esr evolution -y
 
-# Download Nordic Theme
-#cd /usr/share/themes/
-#git clone https://github.com/EliverLara/Nordic.git
 
 # Installing fonts
 cd $builddir
@@ -75,12 +68,8 @@ chown $username:$username /home/$username/.fonts/*
 # Reloading Font
 fc-cache -vf
 
-# Install Nordzy cursor
-#git clone https://github.com/alvatip/Nordzy-cursors
-#cd Nordzy-cursors
-#./install.sh
-#cd $builddir
-#rm -rf Nordzy-cursors
+
+
 
 # Enable wireplumber audio service
 sudo -u $username systemctl --user enable wireplumber.service
@@ -91,6 +80,18 @@ bash scripts/setup.sh
 
 # Use nala
 bash scripts/usenala
+
+
+# Download Nordic Theme
+#cd /usr/share/themes/
+#git clone https://github.com/EliverLara/Nordic.git
+
+# Install Nordzy cursor
+#git clone https://github.com/alvatip/Nordzy-cursors
+#cd Nordzy-cursors
+#./install.sh
+#cd $builddir
+#rm -rf Nordzy-cursors
 
 # -------------------------------------- #
 # ----- FLATPAK ----- #
@@ -112,7 +113,7 @@ flatpak install -y flathub com.mastermindzh.tidal-hifi
 # deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
 # apt update
 # apt install nvidia-driver firmware-misc-nonfree -y
-#
+
 # # Install java-17-amazon-corretto -- https://linuxconfig.org/how-to-locate-and-set-java-home-directory-on-linux
 # wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg && \
 # echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
@@ -129,12 +130,6 @@ systemctl reboot
 
 ########################################################################################################################
 ########################################################################################################################
-
-
-# ----- Google Chrome ----- #
-# wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-# sudo apt install -y ./google-chrome-stable_current_amd64.deb
-# rm google-chrome-stable_current_amd64.deb
 
 
 # ----- Install GNOME extension ----- #
@@ -187,4 +182,3 @@ systemctl reboot
 # # Use the following the get your favorite apps list
 # #   gsettings get org.gnome.shell favorite-apps
 # gsettings set org.gnome.shell favorite-apps "['org.gnome.Terminal.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'org.gnome.Nautilus.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
-#

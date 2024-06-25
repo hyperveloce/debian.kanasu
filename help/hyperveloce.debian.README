@@ -68,12 +68,6 @@ docker-compose --version
 ### GIT SETUP
 ssh-keygen -o -t rsa -C "davie.nguyen@gmail.com"
 xclip -sel clip < ~/.ssh/id_rsa.pub
-ssh -T git@github.com
-git remote set-url origin git@github.com:hyperveloce/debian.kanasu.git
-git add -A
-git commit -am "Update README.md"
-git push
-ssh-add ~/.ssh/id_rsa
 
 ###GIT Use
 git reset --hard HEAD
