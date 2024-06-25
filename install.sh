@@ -25,7 +25,6 @@ builddir=$(pwd)
 # echo "UUID=CE7EA4717EA4544D    /mnt/w.System    ntfs    defaults   0  2" | sudo tee /etc/fstab
 # echo "UUID=543022F1761BF872    /mnt/kanasu.space    ntfs    defaults   0  2" | sudo tee /etc/fstab
 
-
 # System updates
 sudo apt update && sudo apt upgrade
 
@@ -56,8 +55,10 @@ apt install chromium neofetch neovim vim papirus-icon-theme fonts-noto-color-emo
 # # Packages needed for window manager installation
 # sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
 
+# dpkg --list | grep <package>
+
 apt purge libreoffice* -y
-apt purge gnome-contacts rhythmbox purge cheese iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk firefox-esr evolution -y
+apt purge firefox-esr gnome-contacts rhythmbox cheese iagno lightsoff four-in-a-row gnome-robots pegsolitaire gnome-2048 hitori gnome-klotski gnome-mines gnome-mahjongg gnome-sudoku quadrapassel swell-foop gnome-tetravex gnome-taquin aisleriot gnome-chess five-or-more gnome-nibbles tali gnome-weather gnome-online-accounts gnome-music gnome-sound-recorder gnome-maps gnome-calendar gnome-music gnome-text-editor transmission-common transmission-gtk firefox-esr evolution -y
 
 
 # Installing fonts
@@ -80,7 +81,6 @@ bash scripts/setup.sh
 
 # Use nala
 bash scripts/usenala
-
 
 # Download Nordic Theme
 #cd /usr/share/themes/
@@ -108,6 +108,12 @@ flatpak install -y flathub com.mastermindzh.tidal-hifi
 # flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
 # flatpak install -y flathub com.google.AndroidStudio
 
+# Install Brave
+curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+apt update
+apt install brave-browser
+
 
 # # Install NVIDIA --> /etc/apt/sources.list
 # deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
@@ -119,6 +125,17 @@ flatpak install -y flathub com.mastermindzh.tidal-hifi
 # echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
 # apt update
 # apt install java-17-amazon-corretto-jdk -y
+
+
+# ----- Set favorite-apps ----- #
+# Use the following the get your favorite apps list
+gsettings get org.gnome.shell favorite-apps
+gsettings set org.gnome.shell favorite-apps "['thunar.desktop', 'kitty.desktop', 'chromium.desktop', 'brave-browser.desktop']"
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
+cp bg/bg.jpg /home/kanasu/Pictures/bg/
+gsettings set org.gnome.desktop.background picture-uri-dark "/home/kanasu/Pictures/bg/bg.jpg"
+
 
 printf "\e[1;32mYour system is ready and will go for reboot! Thanks you.\e[0m\n"
 
@@ -135,7 +152,6 @@ systemctl reboot
 # ----- Install GNOME extension ----- #
 # # Download GNOME extensions
 # wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
-# wget https://extensions.gnome.org/extension-data/apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
 #
 # # Install GNOME extensions
 # gnome-extensions install dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
@@ -173,12 +189,3 @@ systemctl reboot
 # gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
 # gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
 #
-# # Use the following to list keys and current values of dash-to-dock extension **** change <user> to the actual users directory name ****
-# #   gsettings --schemadir /home/<user>/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/ list-recursively org.gnome.shell.extensions.dash-to-dock
-#
-# done
-#
-# # ----- Set favorite-apps ----- #
-# # Use the following the get your favorite apps list
-# #   gsettings get org.gnome.shell favorite-apps
-# gsettings set org.gnome.shell favorite-apps "['org.gnome.Terminal.desktop', 'org.gnome.gedit.desktop', 'github-desktop.desktop', 'cmake-gui.desktop', 'org.gnome.Nautilus.desktop', 'makemkv.desktop', 'virtualbox.desktop', 'org.gnome.Software.desktop', 'gufw.desktop']"
