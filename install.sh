@@ -71,8 +71,6 @@ chown $username:$username /home/$username/.fonts/*
 fc-cache -vf
 
 
-
-
 # Enable wireplumber audio service
 sudo -u $username systemctl --user enable wireplumber.service
 apt autoremove
@@ -112,7 +110,7 @@ flatpak install -y flathub hu.irl.cameractrls
 
 # Install Brave
 curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
 apt update
 apt install brave-browser
 
@@ -128,66 +126,53 @@ apt install brave-browser
 # apt update
 # apt install java-17-amazon-corretto-jdk -y
 
-
 # ----- Set favorite-apps ----- #
 # Use the following the get your favorite apps list
 gsettings get org.gnome.shell favorite-apps
 gsettings set org.gnome.shell favorite-apps "['thunar.desktop', 'kitty.desktop', 'chromium.desktop', 'brave-browser.desktop', 'io.atom.Atom.desktop', 'com.mastermindzh.tidal-hifi.desktop', 'io.github.mimbrero.WhatsAppDesktop.desktop']"
+
+# ----- Install GNOME extension ----- #
+# Download GNOME extensions
+wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
+
+# ----- Setup GNOME Desktop ----- #
+# Set GNOME tweaks settings
+gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
+gsettings set org.gnome.mutter center-new-windows true
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
 cp bg/bg.jpg /home/kanasu/Pictures/bg/
 gsettings set org.gnome.desktop.background picture-uri-dark "/home/kanasu/Pictures/bg/bg.jpg"
 
+# Use the following to find a GNOME setting
+#   gsettings list-recursively > /tmp/gsettings.before
+#   gsettings list-recursively > /tmp/gsettings.after
+#   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
+
+# Install GNOME extensions
+gnome-extensions install dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
+
+# Enable extensions
+gnome-extensions enable dash-to-dock@micxgx.gmail.com
+
+# # ----- Set dash-to-dock extension settings ----- #
+SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'TOP'
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
+gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
 
 printf "\e[1;32mYour system is ready and will go for reboot! Thanks you.\e[0m\n"
 
 systemctl reboot
-
-### Reference --
-### https://github.com/ChrisTitusTech/Debian-titus
-#https://www.reddit.com/r/unixporn/comments/18vnz41/bspwm_tokyo_night_minor_changes_since_last_year/
-
-########################################################################################################################
-########################################################################################################################
-
-
-# ----- Install GNOME extension ----- #
-# # Download GNOME extensions
-# wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
-#
-# # Install GNOME extensions
-# gnome-extensions install dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
-# gnome-extensions install apps-menugnome-shell-extensions.gcampax.github.com.v52.shell-extension.zip
-
-# ----- Setup GNOME Desktop ----- #
-# # Set GNOME tweaks settings
-# gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
-# gsettings set org.gnome.mutter center-new-windows true
-#
-# # Use the following to find a GNOME setting
-# #   gsettings list-recursively > /tmp/gsettings.before
-# #   gsettings list-recursively > /tmp/gsettings.after
-# #   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
-#
-# # Enable extensions
-# gnome-extensions enable dash-to-dock@micxgx.gmail.com
-# gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
-# # ----- Set dash-to-dock extension settings ----- #
-# SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock extend-height true
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-# gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
-#
