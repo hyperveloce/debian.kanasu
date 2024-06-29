@@ -151,9 +151,24 @@ gsettings set org.gnome.desktop.background picture-uri-dark "/home/kanasu/Pictur
 
 # Install GNOME extensions
 gnome-extensions install dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
+gnome-extensions install openweather-extensionjenslody.de.v121.shell-extension.zip
+gnome-extensions install blur-my-shellaunetx.v62.shell-extension.zip
+gnome-extensions install activitiesworkspacenameahmafi.ir.v8.shell-extension.zip
+gnome-extensions install appindicatorsupportrgcjonas.gmail.com.v58.shell-extension.zip
+gnome-extensions install VitalsCoreCoding.com.v68.shell-extension.zip
+gnome-extensions install user-themegnome-shell-extensions.gcampax.github.com.v58.shell-extension.zip
 
 # Enable extensions
 gnome-extensions enable dash-to-dock@micxgx.gmail.com
+gnome-extensions enable openweather-extension@jenslody.de
+gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
+gnome-extensions enable command-menu@arunk140.com
+gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com
+gnome-extensions enable Vitals@CoreCoding.com
+gnome-extensions enable unblank@sun.wxg@gmail.com
+gnome-extensions enable blur-my-shell@aunetx
+gnome-extensions enable activitiesworkspacename@ahmafi.ir
+gnome-extensions enable enhunceactivitiese@github.com.orbitcorrection
 
 # # ----- Set dash-to-dock extension settings ----- #
 SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
