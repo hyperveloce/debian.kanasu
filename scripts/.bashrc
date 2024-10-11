@@ -690,3 +690,6 @@ export ANDROID_HOME=/home/kanasu/Android/Sdk
 export PATH=$ANDROID_HOME/emulator/:$PATH
 export PATH=$ANDROID_HOME/platform-tools/:$PATH
 export PATH=$ANDROID_HOME/cmdline-tools/bin/:$PATH
+if [ -f "/home/kanasu/.use-nala" ]; then
+        . "/home/kanasu/.use-nala"
+fi
