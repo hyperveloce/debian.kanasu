@@ -104,6 +104,9 @@ flatpak install -y flathub io.github.mimbrero.WhatsAppDesktop
 flatpak install -y flathub io.atom.Atom
 flatpak install -y flathub com.mastermindzh.tidal-hifi
 flatpak install -y flathub hu.irl.cameractrls
+flatpak install -y flathub us.zoom.Zoom
+flatpak install -y flathub org.kde.digikam
+
 # flatpak install -y flathub com.visualstudio.code
 # flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
 # flatpak install -y flathub com.google.AndroidStudio
@@ -113,7 +116,6 @@ curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
 apt update
 apt install brave-browser
-
 
 # # Install NVIDIA --> /etc/apt/sources.list
 # deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
