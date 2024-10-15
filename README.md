@@ -5,6 +5,7 @@ Debian customizations from kanasu
 
 ```
 ssh-keygen -o -t rsa -C "davie.nguyen@gmail.com"
+sudo apt install xclip git
 xclip -sel clip < ~/.ssh/id_rsa.pub
 ```
 
