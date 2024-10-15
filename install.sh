@@ -10,12 +10,12 @@ username=$(id -u -n 1000)
 builddir=$(pwd)
 
 #sudo mkdir -p /mnt/home
-#sudo mount /dev/sdb2 /mnt/home
+#sudo mount /dev/sda2 /mnt/home
 #sudo df -Th
 #sudo cp -aR /home/* /mnt/home
-#sudo umount /dev/sdb2
-#sudo mount /dev/sdb2 /home
-#sudo blkid /dev/sdb2
+#sudo umount /dev/sda2
+#sudo mount /dev/sda2 /home
+#sudo blkid /dev/sda2
 #sudo vim /etc/fstab
 #UUID=7ddfdaed-95fe-4f25-9e64-37cb0b541404    /home    ext4    defaults   0  2
 #echo "UUID=7ddfdaed-95fe-4f25-9e64-37cb0b541404    /home    ext4    defaults   0  2" | sudo tee /etc/fstab
