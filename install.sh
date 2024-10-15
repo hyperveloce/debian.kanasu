@@ -36,7 +36,8 @@ mkdir -p /home/$username/.themes
 mkdir -p /home/$username/Pictures
 mkdir -p /home/$username/Pictures/bg
 cp -R dotconfig/* /home/$username/.config/
-cp bg.jpg /home/$username/Pictures/bg/
+cp bg/bg.jpg /home/$username/Pictures/bg/
+cp themes /home/$username/.themes
 mv user-dirs.dirs /home/$username/.config
 chown -R $username:$username /home/$username
 
