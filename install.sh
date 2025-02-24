@@ -10,12 +10,12 @@ username=$(id -u -n 1000)
 builddir=$(pwd)
 
 #sudo mkdir -p /mnt/home
-#sudo mount /dev/sdb2 /mnt/home
+#sudo mount /dev/sda2 /mnt/home
 #sudo df -Th
 #sudo cp -aR /home/* /mnt/home
-#sudo umount /dev/sdb2
-#sudo mount /dev/sdb2 /home
-#sudo blkid /dev/sdb2
+#sudo umount /dev/sda2
+#sudo mount /dev/sda2 /home
+#sudo blkid /dev/sda2
 #sudo vim /etc/fstab
 #UUID=7ddfdaed-95fe-4f25-9e64-37cb0b541404    /home    ext4    defaults   0  2
 #echo "UUID=7ddfdaed-95fe-4f25-9e64-37cb0b541404    /home    ext4    defaults   0  2" | sudo tee /etc/fstab
@@ -36,7 +36,8 @@ mkdir -p /home/$username/.themes
 mkdir -p /home/$username/Pictures
 mkdir -p /home/$username/Pictures/bg
 cp -R dotconfig/* /home/$username/.config/
-cp bg.jpg /home/$username/Pictures/bg/
+cp bg/bg.jpg /home/$username/Pictures/bg/
+cp themes /home/$username/.themes
 mv user-dirs.dirs /home/$username/.config
 chown -R $username:$username /home/$username
 
@@ -48,7 +49,7 @@ chown -R $username:$username /home/$username
 apt install nala -y
 
 # Installing Essential Programs
-apt install feh kitty thunar thunar-archive-plugin curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome -y
+apt install feh kitty thunar xarchiver curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome -y
 
 # Installing Other less important Programs
 apt install chromium neofetch neovim vim papirus-icon-theme fonts-noto-color-emoji -y
@@ -104,6 +105,9 @@ flatpak install -y flathub io.github.mimbrero.WhatsAppDesktop
 flatpak install -y flathub io.atom.Atom
 flatpak install -y flathub com.mastermindzh.tidal-hifi
 flatpak install -y flathub hu.irl.cameractrls
+flatpak install -y flathub us.zoom.Zoom
+flatpak install -y flathub org.kde.digikam
+
 # flatpak install -y flathub com.visualstudio.code
 # flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
 # flatpak install -y flathub com.google.AndroidStudio
@@ -113,7 +117,6 @@ curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
 apt update
 apt install brave-browser
-
 
 # # Install NVIDIA --> /etc/apt/sources.list
 # deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
