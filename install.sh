@@ -26,7 +26,26 @@ builddir=$(pwd)
 # echo "UUID=543022F1761BF872    /mnt/kanasu.space    ntfs    defaults   0  2" | sudo tee /etc/fstab
 
 # System updates
-sudo apt update && sudo apt upgrade
+sudo apt update && sudo apt upgrade -y
+
+# System setup
+sudo hostnamectl set-hostname hyperveloce
+sudo timedatectl set-timezone Australia/Melbourne
+
+# user setup
+sudo adduser kanasu
+sudo usermod -aG sudo kanasu
+
+# firewall setup
+sudo apt install ufw
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 2222/tcp  # or the port you set for SSH
+sudo ufw enable
+
+# brute force protection
+sudo apt install fail2ban
+sudo systemctl enable fail2ban
 
 # Making .config and Moving config files and background to Pictures
 cd $builddir
