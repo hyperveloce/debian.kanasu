@@ -52,7 +52,7 @@ apt install nala -y
 apt install feh kitty thunar xarchiver curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome -y
 
 # Installing Other less important Programs
-apt install chromium neofetch neovim vim papirus-icon-theme fonts-noto-color-emoji -y
+apt install chromium neofetch neovim vim lazygit papirus-icon-theme fonts-noto-color-emoji -y
 
 # # Packages needed for window manager installation
 # sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
@@ -107,6 +107,10 @@ flatpak install -y flathub com.mastermindzh.tidal-hifi
 flatpak install -y flathub hu.irl.cameractrls
 flatpak install -y flathub us.zoom.Zoom
 flatpak install -y flathub org.kde.digikam
+flatpak install -y flathub com.github.PintaProject.Pinta
+flatpak install -y flathub dev.zed.Zed
+flatpak install -y flathub hu.irl.cameractrls
+flatpak install -y flathub md.obsidian.Obsidian  
 
 # flatpak install -y flathub com.visualstudio.code
 # flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
