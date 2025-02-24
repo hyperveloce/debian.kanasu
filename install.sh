@@ -40,7 +40,7 @@ sudo usermod -aG sudo kanasu
 sudo apt install ufw
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow 2222/tcp  # or the port you set for SSH
+sudo ufw allow 22/tcp  # or the port you set for SSH
 sudo ufw enable
 
 # brute force protection
