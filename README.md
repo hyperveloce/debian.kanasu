@@ -32,3 +32,17 @@ sudo chmod 600 /etc/smbcredentials
 //192.168.50.1/backup  /mnt/ax6000  cifs  credentials=/etc/smbcredentials,vers=2.0,uid=1000,gid=1000,iocharset=utf8  0  0
 
 ```
+
+## How to Set Timezone to Melbourne (SAMPLE) 
+
+Run the following command:
+
+```bash
+sudo timedatectl set-timezone Australia/Melbourne
+```
+
+Verify the timezone:
+
+```bash
+timedatectl
+```
