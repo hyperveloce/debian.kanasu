@@ -12,6 +12,7 @@ xclip -sel clip < ~/.ssh/id_rsa.pub
 ```
 git clone https://github.com/hyperveloce/debian.kanasu
 cd debian.kanasu
+chmod +x install.sh
 sudo ./install.sh
 ```
 
