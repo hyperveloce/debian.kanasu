@@ -218,6 +218,23 @@ alias gpop='git stash pop'
 alias gfp='git fetch --prune'
 alias gclean='git clean -fd'
 
+# Docker commands
+alias d='docker'  # Shorten docker command
+alias dps='docker ps'  # List running containers
+alias dpsa='docker ps -a'  # List all containers (including stopped)
+alias dstop='docker stop'  # Stop a container
+alias dstart='docker start'  # Start a container
+alias drestart='docker restart'  # Restart a container
+alias drm='docker rm'  # Remove a container
+alias drmi='docker rmi'  # Remove an image
+alias dlogs='docker logs'  # View logs from a container
+alias dexec='docker exec -it'  # Execute commands inside a container interactively
+alias dbuild='docker build'  # Build Docker images
+alias dimages='docker images'  # List Docker images
+alias dpull='docker pull'  # Pull an image from a registry
+alias dpush='docker push'  # Push an image to a registry
+alias dclean='docker system prune -f'  # Clean up unused Docker data
+
 # Search command line history
 alias h="history | grep "
 
