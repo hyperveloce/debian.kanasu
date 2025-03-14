@@ -113,7 +113,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias ebrc='edit ~/.bashrc'
 
 # Show help for this .bashrc file
-alias hlp='less ~/.bashrc_help'
+alias hlp='alias | grep '
 
 # alias to show the date
 alias da='date "+%Y-%m-%d %A %T %Z"'
