@@ -164,6 +164,29 @@ alias labc='ls -lap' #alphabetical sort
 alias lf="ls -l | egrep -v '^d'" # files only
 alias ldir="ls -l | egrep '^d'" # directories only
 
+# Git Aliases (simple & clean)
+alias ga='git add'
+alias gc='git commit -m'
+alias gp='git push'
+alias gl='git pull'
+alias gst='git status'
+alias gco='git checkout'
+alias gb='git branch'
+alias gd='git diff'
+alias glog='git log --oneline --graph'
+
+# Quick undo
+alias guncommit='git reset --soft HEAD~1'
+alias gunadd='git restore --staged'
+
+# Stashing
+alias gstash='git stash'
+alias gpop='git stash pop'
+
+# Clean & sync
+alias gfp='git fetch --prune'
+alias gclean='git clean -fd'
+
 # alias chmod commands
 alias mx='chmod a+x'
 alias 000='chmod -R 000'
@@ -171,6 +194,29 @@ alias 644='chmod -R 644'
 alias 666='chmod -R 666'
 alias 755='chmod -R 755'
 alias 777='chmod -R 777'
+
+# Git Aliases (simple & clean)
+alias ga='git add'
+alias gc='git commit -m'
+alias gp='git push'
+alias gl='git pull'
+alias gst='git status'
+alias gco='git checkout'
+alias gb='git branch'
+alias gd='git diff'
+alias glog='git log --oneline --graph'
+
+# Quick undo
+alias guncommit='git reset --soft HEAD~1'
+alias gunadd='git restore --staged'
+
+# Stashing
+alias gstash='git stash'
+alias gpop='git stash pop'
+
+# Clean & sync
+alias gfp='git fetch --prune'
+alias gclean='git clean -fd'
 
 # Search command line history
 alias h="history | grep "
@@ -690,6 +736,9 @@ export ANDROID_HOME=/home/kanasu/Android/Sdk
 export PATH=$ANDROID_HOME/emulator/:$PATH
 export PATH=$ANDROID_HOME/platform-tools/:$PATH
 export PATH=$ANDROID_HOME/cmdline-tools/bin/:$PATH
+if [ -f "/home/kanasu/.use-nala" ]; then
+        . "/home/kanasu/.use-nala"
+fi
 if [ -f "/home/kanasu/.use-nala" ]; then
         . "/home/kanasu/.use-nala"
 fi
