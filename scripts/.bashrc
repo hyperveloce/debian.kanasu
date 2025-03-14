@@ -196,15 +196,19 @@ alias 755='chmod -R 755'
 alias 777='chmod -R 777'
 
 # Git Aliases (simple & clean)
-alias ga='git add'
-alias gc='git commit -m'
-alias gp='git push'
-alias gl='git pull'
-alias gs='git status'
-alias gco='git checkout'
-alias gb='git branch'
-alias gd='git diff'
-alias glog='git log --oneline --graph'
+alias dps='docker ps -a'  # List all containers
+alias dst='docker stop'  # Stop a container
+alias dsrt='docker start'  # Start a container
+alias drst='docker restart'  # Restart a container
+alias drm='docker rm'  # Remove a container
+alias drmi='docker rmi'  # Remove an image
+alias dlg='docker logs'  # View container logs
+alias dex='docker exec -it'  # Run commands inside a container
+alias dbld='docker build'  # Build Docker images
+alias dimg='docker images'  # List Docker images
+alias dpl='docker pull'  # Pull an image
+alias dpp='docker push'  # Push an image
+alias dclean='docker system prune -f'  # Clean unused Docker data
 
 # Quick undo
 alias guncommit='git reset --soft HEAD~1'
