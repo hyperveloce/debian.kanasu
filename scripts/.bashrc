@@ -113,7 +113,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias ebrc='edit ~/.bashrc'
 
 # Show help for this .bashrc file
-alias hlp='less ~/.bashrc_help'
+alias hlp='alias | grep '
 
 # alias to show the date
 alias da='date "+%Y-%m-%d %A %T %Z"'
@@ -164,6 +164,29 @@ alias labc='ls -lap' #alphabetical sort
 alias lf="ls -l | egrep -v '^d'" # files only
 alias ldir="ls -l | egrep '^d'" # directories only
 
+# Git Aliases (simple & clean)
+alias ga='git add'
+alias gc='git commit -m'
+alias gp='git push'
+alias gl='git pull'
+alias gst='git status'
+alias gco='git checkout'
+alias gb='git branch'
+alias gd='git diff'
+alias glog='git log --oneline --graph'
+
+# Quick undo
+alias guncommit='git reset --soft HEAD~1'
+alias gunadd='git restore --staged'
+
+# Stashing
+alias gstash='git stash'
+alias gpop='git stash pop'
+
+# Clean & sync
+alias gfp='git fetch --prune'
+alias gclean='git clean -fd'
+
 # alias chmod commands
 alias mx='chmod a+x'
 alias 000='chmod -R 000'
@@ -171,6 +194,50 @@ alias 644='chmod -R 644'
 alias 666='chmod -R 666'
 alias 755='chmod -R 755'
 alias 777='chmod -R 777'
+
+# Git Aliases (simple & clean)
+alias dps='docker ps -a'  # List all containers
+alias dst='docker stop'  # Stop a container
+alias dsrt='docker start'  # Start a container
+alias drst='docker restart'  # Restart a container
+alias drm='docker rm'  # Remove a container
+alias drmi='docker rmi'  # Remove an image
+alias dlg='docker logs'  # View container logs
+alias dex='docker exec -it'  # Run commands inside a container
+alias dbld='docker build'  # Build Docker images
+alias dimg='docker images'  # List Docker images
+alias dpl='docker pull'  # Pull an image
+alias dpp='docker push'  # Push an image
+alias dclean='docker system prune -f'  # Clean unused Docker data
+
+# Quick undo
+alias guncommit='git reset --soft HEAD~1'
+alias gunadd='git restore --staged'
+
+# Stashing
+alias gstash='git stash'
+alias gpop='git stash pop'
+
+# Clean & sync
+alias gfp='git fetch --prune'
+alias gclean='git clean -fd'
+
+# Docker commands
+alias d='docker'  # Shorten docker command
+alias dps='docker ps'  # List running containers
+alias dpsa='docker ps -a'  # List all containers (including stopped)
+alias dstop='docker stop'  # Stop a container
+alias dstart='docker start'  # Start a container
+alias drestart='docker restart'  # Restart a container
+alias drm='docker rm'  # Remove a container
+alias drmi='docker rmi'  # Remove an image
+alias dlogs='docker logs'  # View logs from a container
+alias dexec='docker exec -it'  # Execute commands inside a container interactively
+alias dbuild='docker build'  # Build Docker images
+alias dimages='docker images'  # List Docker images
+alias dpull='docker pull'  # Pull an image from a registry
+alias dpush='docker push'  # Push an image to a registry
+alias dclean='docker system prune -f'  # Clean up unused Docker data
 
 # Search command line history
 alias h="history | grep "
@@ -694,10 +761,10 @@ if [ -f "/home/kanasu/.use-nala" ]; then
         . "/home/kanasu/.use-nala"
 fi
 
-
 # Check if we're in an SSH session
 if [[ -n "$SSH_CONNECTION" ]]; then
     export PS1="\[\033[01;32m\][SSH] \[\033[00m\]\u@\h:\w\$ "
 else
     export PS1="\[\033[01;34m\]\u@\h:\w\$ \[\033[00m\]"
+
 fi

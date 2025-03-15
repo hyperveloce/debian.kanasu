@@ -26,7 +26,26 @@ builddir=$(pwd)
 # echo "UUID=543022F1761BF872    /mnt/kanasu.space    ntfs    defaults   0  2" | sudo tee /etc/fstab
 
 # System updates
-sudo apt update && sudo apt upgrade
+sudo apt update && sudo apt upgrade -y
+
+# System setup
+sudo hostnamectl set-hostname hyperveloce
+sudo timedatectl set-timezone Australia/Melbourne
+
+# user setup
+sudo adduser kanasu
+sudo usermod -aG sudo kanasu
+
+# firewall setup
+sudo apt install ufw
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp  # or the port you set for SSH
+sudo ufw enable
+
+# brute force protection
+sudo apt install fail2ban
+sudo systemctl enable fail2ban
 
 # Making .config and Moving config files and background to Pictures
 cd $builddir
@@ -52,7 +71,7 @@ apt install nala -y
 apt install feh kitty thunar xarchiver curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome -y
 
 # Installing Other less important Programs
-apt install chromium neofetch neovim vim papirus-icon-theme fonts-noto-color-emoji -y
+apt install chromium neofetch neovim vim lazygit papirus-icon-theme fonts-noto-color-emoji -y
 
 # # Packages needed for window manager installation
 # sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
@@ -107,6 +126,10 @@ flatpak install -y flathub com.mastermindzh.tidal-hifi
 flatpak install -y flathub hu.irl.cameractrls
 flatpak install -y flathub us.zoom.Zoom
 flatpak install -y flathub org.kde.digikam
+flatpak install -y flathub com.github.PintaProject.Pinta
+flatpak install -y flathub dev.zed.Zed
+flatpak install -y flathub hu.irl.cameractrls
+flatpak install -y flathub md.obsidian.Obsidian  
 
 # flatpak install -y flathub com.visualstudio.code
 # flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
