@@ -760,6 +760,11 @@ export PATH=$ANDROID_HOME/cmdline-tools/bin/:$PATH
 if [ -f "/home/kanasu/.use-nala" ]; then
         . "/home/kanasu/.use-nala"
 fi
-if [ -f "/home/kanasu/.use-nala" ]; then
-        . "/home/kanasu/.use-nala"
+
+# Check if we're in an SSH session
+if [[ -n "$SSH_CONNECTION" ]]; then
+    export PS1="\[\033[01;32m\][SSH] \[\033[00m\]\u@\h:\w\$ "
+else
+    export PS1="\[\033[01;34m\]\u@\h:\w\$ \[\033[00m\]"
+
 fi
