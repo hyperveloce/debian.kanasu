@@ -195,20 +195,20 @@ alias 666='chmod -R 666'
 alias 755='chmod -R 755'
 alias 777='chmod -R 777'
 
-# Git Aliases (simple & clean)
+# Docker commands
 alias dps='docker ps -a'  # List all containers
-alias dst='docker stop'  # Stop a container
-alias dsrt='docker start'  # Start a container
+alias dsto='docker stop'  # Stop a container
+alias dstt='docker start'  # Start a container
 alias drst='docker restart'  # Restart a container
 alias drm='docker rm'  # Remove a container
 alias drmi='docker rmi'  # Remove an image
-alias dlg='docker logs'  # View container logs
+alias dlo='docker logs'  # View container logs
 alias dex='docker exec -it'  # Run commands inside a container
-alias dbld='docker build'  # Build Docker images
-alias dimg='docker images'  # List Docker images
+alias dbu='docker build'  # Build Docker images
+alias dim='docker images'  # List Docker images
 alias dpl='docker pull'  # Pull an image
-alias dpp='docker push'  # Push an image
-alias dclean='docker system prune -f'  # Clean unused Docker data
+alias dpl='docker push'  # Push an image
+alias dcle='docker system prune -f'  # Clean unused Docker data
 
 # Quick undo
 alias guncommit='git reset --soft HEAD~1'
