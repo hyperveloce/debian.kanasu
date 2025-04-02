@@ -71,7 +71,7 @@ apt install nala -y
 apt install feh kitty thunar xarchiver curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome -y
 
 # Installing Other less important Programs
-apt install chromium neofetch neovim vim lazygit papirus-icon-theme fonts-noto-color-emoji -y
+apt install chromium neofetch vim papirus-icon-theme fonts-noto-color-emoji -y
 
 # # Packages needed for window manager installation
 # sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
@@ -112,9 +112,7 @@ bash scripts/usenala
 #cd $builddir
 #rm -rf Nordzy-cursors
 
-# -------------------------------------- #
 # ----- FLATPAK ----- #
-# -------------------------------------- #
 
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 # install dir /var/lib/flatpak/app/ # config store ~/.var/app/
@@ -127,13 +125,18 @@ flatpak install -y flathub hu.irl.cameractrls
 flatpak install -y flathub us.zoom.Zoom
 flatpak install -y flathub org.kde.digikam
 flatpak install -y flathub com.github.PintaProject.Pinta
-flatpak install -y flathub dev.zed.Zed
 flatpak install -y flathub hu.irl.cameractrls
-flatpak install -y flathub md.obsidian.Obsidian  
+flatpak install -y flathub md.obsidian.Obsidian
 
-# flatpak install -y flathub com.visualstudio.code
-# flatpak install -y flathub com.jetbrains.IntelliJ-IDEA-Community
-# flatpak install -y flathub com.google.AndroidStudio
+# Install librewolf
+wget -O- https://deb.librewolf.net/keyring.gpg | sudo tee /usr/share/keyrings/librewolf-keyring.gpg
+sudo apt update && sudo apt install librewolf -y
+
+# Install Zed
+curl -f https://zed.dev/install.sh | sh
+# neovim
+sudo apt-get install neovim
+sudo apt-get install python3-neovim
 
 # Install Brave
 curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg

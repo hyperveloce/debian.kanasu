@@ -1,4 +1,6 @@
 #!/bin/bash
+fastfetch
+
 iatest=$(expr index "$-" i)
 
 #######################################################
@@ -195,10 +197,12 @@ alias 666='chmod -R 666'
 alias 755='chmod -R 755'
 alias 777='chmod -R 777'
 
+<<<<<<< HEAD
 # Docker commands
-alias dps='docker ps -a'  # List all containers
-alias dsto='docker stop'  # Stop a container
-alias dstt='docker start'  # Start a container
+alias dps='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"'  # List all containers
+alias dst='docker stop'  # Stop a container
+alias dsrt='docker start'  # Start a container
+>>>>>>> 2ddc8eb (update new config files)
 alias drst='docker restart'  # Restart a container
 alias drm='docker rm'  # Remove a container
 alias drmi='docker rmi'  # Remove an image

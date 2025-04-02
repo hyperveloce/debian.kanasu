@@ -73,6 +73,26 @@ For added security, use a separate credentials file:
     //192.168.50.1/backup /mnt/ax6000 cifs credentials=/etc/smbcredentials,vers=2.0,uid=1000,gid=1000,iocharset=utf8 0 0
     ```
 
+
+### Wireguard VPN
+1. [Debian WireGuard setup guide](https://wiki.debian.org/WireGuard)
+    ```bash
+    nmcli device show | grep IP4.ADDRESS
+    systemctl start wg-quick@wgs_client
+    ip a show wgs_client
+    systemctl stop wg-quick@wgs_client
+    systemctl enable wg-quick@wgs_client
+    systemctl disable wg-quick@wgs_client
+    ```
+
+### Nextcloud also sync using cron @reboot
+1. update crontab and include the line command
+    ```bash
+    sudo crontab -e
+    ```
+add
+@reboot flatpak --system override --env=QT_QPA_PLATFORMTHEME=kde com.nextcloud.desktopclient.nextcloud
+
 ---
 
 ## Additional Configuration

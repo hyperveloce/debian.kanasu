@@ -108,6 +108,8 @@ linkConfig() {
     ln -svf ${GITPATH}/kitty/current-theme.conf ${USER_HOME}/.config/kitty/current-theme.conf
     ln -svf ${GITPATH}/kitty/kitty.conf ${USER_HOME}/.config/kitty/kitty.conf
     ln -svf ${GITPATH}/kitty/theme.conf ${USER_HOME}/.config/kitty/theme.conf
+    mkdir ${USER_HOME}/.config/zed
+    ln -svf ${GITPATH}/zed/settings.conf ${USER_HOME}/.config/zed/settings.conf
 }
 
 checkEnv
