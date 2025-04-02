@@ -68,7 +68,7 @@ chown -R $username:$username /home/$username
 apt install nala -y
 
 # Installing Essential Programs
-apt install feh kitty thunar xarchiver curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome -y
+apt install feh kitty thunar xarchiver curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome gnome-power-manager stacer preload diodon hollywood -y
 
 # Installing Other less important Programs
 apt install chromium neofetch vim papirus-icon-theme fonts-noto-color-emoji -y
@@ -119,7 +119,6 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 flatpak install -y flathub com.github.IsmaelMartinez.teams_for_linux
 flatpak install -y flathub io.github.realmazharhussain.GdmSettings
 flatpak install -y flathub io.github.mimbrero.WhatsAppDesktop
-flatpak install -y flathub io.atom.Atom
 flatpak install -y flathub com.mastermindzh.tidal-hifi
 flatpak install -y flathub hu.irl.cameractrls
 flatpak install -y flathub us.zoom.Zoom
@@ -127,10 +126,10 @@ flatpak install -y flathub org.kde.digikam
 flatpak install -y flathub com.github.PintaProject.Pinta
 flatpak install -y flathub hu.irl.cameractrls
 flatpak install -y flathub md.obsidian.Obsidian
+flatpak install -y flathub io.gitlab.librewolf-community
+flatpak install -y flathub bleachbit
 
-# Install librewolf
-wget -O- https://deb.librewolf.net/keyring.gpg | sudo tee /usr/share/keyrings/librewolf-keyring.gpg
-sudo apt update && sudo apt install librewolf -y
+# flatpak install -y flathub dev.zed.Zed
 
 # Install Zed
 curl -f https://zed.dev/install.sh | sh
@@ -143,6 +142,12 @@ curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
 apt update
 apt install brave-browser
+
+# fastfetch
+echo 'deb http://download.opensuse.org/repositories/home:/guideos/Debian_12/ /' | sudo tee /etc/apt/sources.list.d/home:guideos.list
+curl -fsSL https://download.opensuse.org/repositories/home:guideos/Debian_12/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_guideos.gpg > /dev/null
+apt update
+apt install fastfetch
 
 # # Install NVIDIA --> /etc/apt/sources.list
 # deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
@@ -158,64 +163,24 @@ apt install brave-browser
 # ----- Set favorite-apps ----- #
 # Use the following the get your favorite apps list
 gsettings get org.gnome.shell favorite-apps
-gsettings set org.gnome.shell favorite-apps "['thunar.desktop', 'kitty.desktop', 'chromium.desktop', 'brave-browser.desktop', 'io.atom.Atom.desktop', 'com.mastermindzh.tidal-hifi.desktop', 'io.github.mimbrero.WhatsAppDesktop.desktop']"
+gsettings set org.gnome.shell favorite-apps "['brave-browser.desktop', 'io.gitlab.librewolf-community.desktop', 'kitty.desktop', 'md.obsidian.Obsidian.desktop', 'com.github.IsmaelMartinez.teams_for_linux.desktop', 'dev.zed.Zed.desktop', 'thunar.desktop', 'io.github.mimbrero.WhatsAppDesktop.desktop', 'com.mastermindzh.tidal-hifi.desktop']"
 
-# ----- Install GNOME extension ----- #
-# Download GNOME extensions
-wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
 
 # ----- Setup GNOME Desktop ----- #
 # Set GNOME tweaks settings
-gsettings set org.gnome.desktop.wm.preferences button-layout 'icon:minimize,maximize,close'
-gsettings set org.gnome.mutter center-new-windows true
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
 cp bg/bg.jpg /home/kanasu/Pictures/bg/
 gsettings set org.gnome.desktop.background picture-uri-dark "/home/kanasu/Pictures/bg/bg.jpg"
+gsettings set org.gnome.desktop.interface enable-animations false
 
-# Use the following to find a GNOME setting
-#   gsettings list-recursively > /tmp/gsettings.before
-#   gsettings list-recursively > /tmp/gsettings.after
-#   diff /tmp/gsettings.before /tmp/gsettings.after | grep '[>|<]'
-
+#Find list of gnome-extensions - gnome-extensions list
 # Install GNOME extensions
-gnome-extensions install dash-to-dockmicxgx.gmail.com.v84.shell-extension.zip
-gnome-extensions install openweather-extensionjenslody.de.v121.shell-extension.zip
-gnome-extensions install blur-my-shellaunetx.v62.shell-extension.zip
-gnome-extensions install activitiesworkspacenameahmafi.ir.v8.shell-extension.zip
-gnome-extensions install appindicatorsupportrgcjonas.gmail.com.v58.shell-extension.zip
-gnome-extensions install VitalsCoreCoding.com.v68.shell-extension.zip
-gnome-extensions install user-themegnome-shell-extensions.gcampax.github.com.v58.shell-extension.zip
+# customreboot@nova1545
+# openweather-extension@jenslody.de
+# openbar@neuromorph
+# Vitals@CoreCoding.com
+# blur-my-shell@aunetx
+# unblank@sun.wxg@gmail.com
 
-# Enable extensions
-gnome-extensions enable dash-to-dock@micxgx.gmail.com
-gnome-extensions enable openweather-extension@jenslody.de
-gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com
-gnome-extensions enable command-menu@arunk140.com
-gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com
-gnome-extensions enable Vitals@CoreCoding.com
-gnome-extensions enable unblank@sun.wxg@gmail.com
-gnome-extensions enable blur-my-shell@aunetx
-gnome-extensions enable activitiesworkspacename@ahmafi.ir
-gnome-extensions enable enhunceactivitiese@github.com.orbitcorrection
-
-# # ----- Set dash-to-dock extension settings ----- #
-SCHEMADIR="/home/$USER/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/schemas/"
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-position 'TOP'
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dock-fixed true
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-previews'
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock animate-show-apps false
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-trash true
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock show-mounts false
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-shrink true
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock disable-overview-on-startup true
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-style 'SEGMENTED'
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock unity-backlit-items false
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock running-indicator-dominant-color true
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock custom-theme-customize-running-dots false
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-gsettings --schemadir $SCHEMADIR set org.gnome.shell.extensions.dash-to-dock background-opacity 0.75
 
 printf "\e[1;32mYour system is ready and will go for reboot! Thanks you.\e[0m\n"
 

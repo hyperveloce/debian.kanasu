@@ -95,6 +95,13 @@ add
 
 ---
 
+### TODO post install
+
+1. set extensions
+2. automatic startup appsc
+
+
+
 ## Additional Configuration
 
 ### Kitty Terminal Themes
