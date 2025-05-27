@@ -67,11 +67,60 @@ chown -R $username:$username /home/$username
 # # Install nala
 apt install nala -y
 
-# Installing Essential Programs
-apt install feh kitty thunar xarchiver curl x11-xserver-utils unzip wget pipewire-jack pipewire-alsa pipewire-pulse qjackctl build-essential zoxide flatpak gnome-software-plugin-flatpak barrier remmina synaptic gnome-tweaks gnome-shell-extension-manager network-manager network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome gnome-power-manager stacer preload diodon hollywood -y
+sudo apt install -y \
 
-# Installing Other less important Programs
-apt install chromium neofetch vim papirus-icon-theme fonts-noto-color-emoji -y
+# 🛠️ System Tools
+stacer \
+timeshift \
+barrier \
+btop \
+picom \
+dupeguru \
+qjackctl \
+xarchiver \
+curl \
+x11-xserver-utils \
+unzip \
+wget \
+preload \
+build-essential \
+zoxide \
+flatpak \
+gnome-software-plugin-flatpak \
+synaptic \
+gnome-tweaks \
+gnome-shell-extension-manager \
+gnome-power-manager \
+
+# 🌐 Networking & Remote Access
+network-manager \
+network-manager-gnome \
+network-manager-openvpn \
+network-manager-openvpn-gnome \
+
+# 🌍 Web Browsers
+brave-browser \
+librewolf \
+chromium \
+
+# 🖼️ Image & Media Utilities
+feh \
+geeqie \
+shotwell \
+org.darktable.darktable \
+papirus-icon-theme \
+fonts-noto-color-emoji \
+
+# 🧰 Developer & Power User Tools
+kitty \
+neovim \
+cmatrix \
+diodon \
+vim \
+
+# 🎭 Miscellaneous & Fun
+hollywood \
+neofetch
 
 # # Packages needed for window manager installation
 # sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
@@ -114,22 +163,21 @@ bash scripts/usenala
 
 # ----- FLATPAK ----- #
 
+# Add Flathub repo if not already added
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-# install dir /var/lib/flatpak/app/ # config store ~/.var/app/
-flatpak install -y flathub com.github.IsmaelMartinez.teams_for_linux
-flatpak install -y flathub io.github.realmazharhussain.GdmSettings
-flatpak install -y flathub io.github.mimbrero.WhatsAppDesktop
-flatpak install -y flathub com.mastermindzh.tidal-hifi
-flatpak install -y flathub hu.irl.cameractrls
-flatpak install -y flathub us.zoom.Zoom
-flatpak install -y flathub org.kde.digikam
-flatpak install -y flathub com.github.PintaProject.Pinta
-flatpak install -y flathub hu.irl.cameractrls
-flatpak install -y flathub md.obsidian.Obsidian
-flatpak install -y flathub io.gitlab.librewolf-community
-flatpak install -y flathub bleachbit
 
-# flatpak install -y flathub dev.zed.Zed
+# Install Flatpak apps system-wide from Flathub
+flatpak install -y --system flathub com.github.IsmaelMartinez.teams_for_linux
+flatpak install -y --system flathub io.github.realmazharhussain.GdmSettings
+flatpak install -y --system flathub io.github.mimbrero.WhatsAppDesktop
+flatpak install -y --system flathub com.mastermindzh.tidal-hifi
+flatpak install -y --system flathub hu.irl.cameractrls
+flatpak install -y --system flathub us.zoom.Zoom
+flatpak install -y --system flathub org.kde.digikam
+flatpak install -y --system flathub com.github.PintaProject.Pinta
+flatpak install -y --system flathub md.obsidian.Obsidian
+flatpak install -y --system flathub io.gitlab.librewolf-community
+flatpak install -y --system flathub bleachbit
 
 # Install Zed
 curl -f https://zed.dev/install.sh | sh
@@ -143,44 +191,40 @@ echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] http
 apt update
 apt install brave-browser
 
+# Install librewolf
+wget -O- https://deb.librewolf.net/keyring.gpg | sudo tee /usr/share/keyrings/librewolf-keyring.gpg
+sudo apt update && sudo apt install librewolf -y
+
 # fastfetch
 echo 'deb http://download.opensuse.org/repositories/home:/guideos/Debian_12/ /' | sudo tee /etc/apt/sources.list.d/home:guideos.list
 curl -fsSL https://download.opensuse.org/repositories/home:guideos/Debian_12/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_guideos.gpg > /dev/null
 apt update
 apt install fastfetch
 
-# # Install NVIDIA --> /etc/apt/sources.list
-# deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
-# apt update
-# apt install nvidia-driver firmware-misc-nonfree -y
+# ----- Set gnome-extensions ----- #
+gnome-extensions install --force customreboot@nova1545.zip && gnome-extensions enable customreboot@nova1545
+gnome-extensions install --force openweather-extension@jenslody.de.zip && gnome-extensions enable openweather-extension@jenslody.de
+gnome-extensions install --force openbar@neuromorph.zip && gnome-extensions enable openbar@neuromorph
+gnome-extensions install --force Vitals@CoreCoding.com.zip && gnome-extensions enable Vitals@CoreCoding.com
+gnome-extensions install --force blur-my-shell@aunetx.zip && gnome-extensions enable blur-my-shell@aunetx
+gnome-extensions install --force unblank@sun.wxg@gmail.com.zip && gnome-extensions enable unblank@sun.wxg@gmail.com
 
-# # Install java-17-amazon-corretto -- https://linuxconfig.org/how-to-locate-and-set-java-home-directory-on-linux
-# wget -O - https://apt.corretto.aws/corretto.key | sudo gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg && \
-# echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | sudo tee /etc/apt/sources.list.d/corretto.list
-# apt update
-# apt install java-17-amazon-corretto-jdk -y
-
-# ----- Set favorite-apps ----- #
-# Use the following the get your favorite apps list
-gsettings get org.gnome.shell favorite-apps
-gsettings set org.gnome.shell favorite-apps "['brave-browser.desktop', 'io.gitlab.librewolf-community.desktop', 'kitty.desktop', 'md.obsidian.Obsidian.desktop', 'com.github.IsmaelMartinez.teams_for_linux.desktop', 'dev.zed.Zed.desktop', 'thunar.desktop', 'io.github.mimbrero.WhatsAppDesktop.desktop', 'com.mastermindzh.tidal-hifi.desktop']"
-
+gnome-extensions enable customreboot@nova1545 || true
+gnome-extensions enable openweather-extension@jenslody.de || true
+gnome-extensions enable openbar@neuromorph || true
+gnome-extensions enable Vitals@CoreCoding.com || true
+gnome-extensions enable blur-my-shell@aunetx || true
+gnome-extensions enable unblank@sun.wxg@gmail.com || true
+gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com || true
 
 # ----- Setup GNOME Desktop ----- #
 # Set GNOME tweaks settings
 cp bg/bg.jpg /home/kanasu/Pictures/bg/
 gsettings set org.gnome.desktop.background picture-uri-dark "/home/kanasu/Pictures/bg/bg.jpg"
+dconf load / < gnome/gnome-settings.ini
+gsettings get org.gnome.shell favorite-apps
+gsettings set org.gnome.shell favorite-apps "['thunar.desktop', 'kitty.desktop', 'chromium.desktop', 'brave-browser.desktop', 'io.atom.Atom.desktop', 'com.mastermindzh.tidal-hifi.desktop', 'io.github.mimbrero.WhatsAppDesktop.desktop']"
 gsettings set org.gnome.desktop.interface enable-animations false
-
-#Find list of gnome-extensions - gnome-extensions list
-# Install GNOME extensions
-# customreboot@nova1545
-# openweather-extension@jenslody.de
-# openbar@neuromorph
-# Vitals@CoreCoding.com
-# blur-my-shell@aunetx
-# unblank@sun.wxg@gmail.com
-
 
 printf "\e[1;32mYour system is ready and will go for reboot! Thanks you.\e[0m\n"
 

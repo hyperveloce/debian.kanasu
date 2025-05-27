@@ -197,16 +197,13 @@ alias 666='chmod -R 666'
 alias 755='chmod -R 755'
 alias 777='chmod -R 777'
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 # Docker commands
 =======
 # Git Aliases (simple & clean)
->>>>>>> 2ddc8eb (update new config files)
 alias dps='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"'  # List all containers
 alias dst='docker stop'  # Stop a container
 alias dsrt='docker start'  # Start a container
->>>>>>> 2ddc8eb (update new config files)
 alias drst='docker restart'  # Restart a container
 alias drm='docker rm'  # Remove a container
 alias drmi='docker rmi'  # Remove an image
