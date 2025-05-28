@@ -120,7 +120,7 @@ vim \
 
 # 🎭 Miscellaneous & Fun
 hollywood \
-neofetch
+fastfetch
 
 # # Packages needed for window manager installation
 # sudo apt install -y picom nitrogen rofi dunst libnotify-bin wmctrl xdotool
