@@ -199,8 +199,6 @@ alias 777='chmod -R 777'
 
 
 # Docker commands
-=======
-# Git Aliases (simple & clean)
 alias dps='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"'  # List all containers
 alias dst='docker stop'  # Stop a container
 alias dsrt='docker start'  # Start a container
