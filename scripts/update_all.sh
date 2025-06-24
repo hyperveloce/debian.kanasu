@@ -9,12 +9,12 @@ sudo apt autoremove -y
 sudo apt clean
 sudo apt autoclean
 
-# Update Snaps (if installed)
-echo -e "\n\033[1;32mUpdating Snaps...\033[0m"
-if command -v snap &> /dev/null; then
-    sudo snap refresh
+# Update Flatpaks (if installed)
+echo -e "\n\033[1;32mUpdating Flatpaks...\033[0m"
+if command -v flatpak &> /dev/null; then
+    flatpak update -y
 else
-    echo "Snap not installed. Skipping."
+    echo "Flatpak not installed. Skipping."
 fi
 
 # Update Firmware (fwupd)
