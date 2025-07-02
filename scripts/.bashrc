@@ -199,7 +199,7 @@ alias 777='chmod -R 777'
 
 
 # Docker commands
-alias dps='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"'  # List all containers
+alias dps='docker ps -a --format '\''table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'\'''
 alias dst='docker stop'  # Stop a container
 alias dsrt='docker start'  # Start a container
 alias drst='docker restart'  # Restart a container
