@@ -161,6 +161,14 @@ bash scripts/usenala
 #cd $builddir
 #rm -rf Nordzy-cursors
 
+# Add Syncthing repo key
+curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
+# Add Syncthing repo
+echo "deb https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list
+# Update and install
+sudo apt update
+sudo apt install syncthing -y
+
 # ----- FLATPAK ----- #
 
 # Add Flathub repo if not already added
@@ -169,7 +177,7 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 # Install Flatpak apps system-wide from Flathub
 flatpak install -y --system flathub com.github.IsmaelMartinez.teams_for_linux
 flatpak install -y --system flathub io.github.realmazharhussain.GdmSettings
-flatpak install -y --system flathub io.github.mimbrero.WhatsAppDesktop
+flatpak install -y --system flathub flathub com.rtosta.zapzap
 flatpak install -y --system flathub com.mastermindzh.tidal-hifi
 flatpak install -y --system flathub hu.irl.cameractrls
 flatpak install -y --system flathub us.zoom.Zoom
@@ -179,6 +187,7 @@ flatpak install -y --system flathub md.obsidian.Obsidian
 flatpak install -y --system flathub io.gitlab.librewolf-community
 flatpak install -y --system flathub bleachbit
 flatpak install -y --system flathub com.rustdesk.RustDesk
+
 # Install Zed
 curl -f https://zed.dev/install.sh | sh
 # neovim
