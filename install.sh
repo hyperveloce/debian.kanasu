@@ -187,7 +187,7 @@ flatpak install -y --system flathub md.obsidian.Obsidian
 flatpak install -y --system flathub io.gitlab.librewolf-community
 flatpak install -y --system flathub bleachbit
 flatpak install -y --system flathub com.rustdesk.RustDesk
-
+flatpak install -y --system com.simplenote.Simplenote
 # Install Zed
 curl -f https://zed.dev/install.sh | sh
 # neovim
