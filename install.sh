@@ -14,87 +14,49 @@ HOSTNAME="hyperveloce"
 TIMEZONE="Australia/Melbourne"
 USERNAME="kanasu"
 
-# NVIDIA is intentionally NOT managed by this installer.
-# NVIDIA installation/update will be handled manually.
-INSTALL_NVIDIA="false"
-
-# ------------------------------------------------------------
-# Colours
-# ------------------------------------------------------------
-
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
-
-# ------------------------------------------------------------
-# Helper functions
-# ------------------------------------------------------------
-
-print_section()
-{
-    echo
-    echo "============================================================"
-    echo " $1"
-    echo "============================================================"
-    echo
-}
-
-info()
-{
-    echo -e "${GREEN}[INFO]${NC} $1"
-}
-
-warning()
-{
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-error()
-{
-    echo -e "${RED}[ERROR]${NC} $1"
-}
+# Set to false if you do not want an automatic reboot.
+REBOOT_AT_END=true
 
 # ------------------------------------------------------------
 # Check root
 # ------------------------------------------------------------
 
 if [[ $EUID -ne 0 ]]; then
-    error "You must run this script as root."
+    echo "You must run this script as root."
     echo
-    echo "Run:"
+    echo "Example:"
     echo "  sudo ./install.sh"
-    echo
     exit 1
 fi
 
 # ------------------------------------------------------------
-# Check operating system
+# Check Debian version
 # ------------------------------------------------------------
 
 if [[ ! -f /etc/os-release ]]; then
-    error "Cannot determine operating system."
+    echo "Cannot determine operating system."
     exit 1
 fi
 
 source /etc/os-release
 
 if [[ "${ID:-}" != "debian" ]]; then
-    error "This script is intended for Debian."
+    echo "This script is intended for Debian."
     echo "Detected: ${PRETTY_NAME:-unknown}"
     exit 1
 fi
 
 if [[ "${VERSION_ID:-}" != "13" ]]; then
-    error "This script is intended for Debian 13 (Trixie)."
+    echo "This script is intended for Debian 13 (Trixie)."
     echo "Detected: ${PRETTY_NAME:-unknown}"
     exit 1
 fi
 
-print_section "Debian 13 (Trixie) setup"
-
-info "Detected: ${PRETTY_NAME}"
-info "NVIDIA installation/update: DISABLED"
+echo
+echo "============================================================"
+echo " Debian 13 (Trixie) setup"
+echo "============================================================"
+echo
 
 # ------------------------------------------------------------
 # Determine build directory
@@ -102,63 +64,66 @@ info "NVIDIA installation/update: DISABLED"
 
 BUILDDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-info "Build directory: $BUILDDIR"
-
 # ------------------------------------------------------------
 # Determine desktop user
 # ------------------------------------------------------------
 
 if id "$USERNAME" >/dev/null 2>&1; then
-
-    info "User $USERNAME already exists."
-
+    echo "User $USERNAME already exists."
 else
-
-    info "Creating user $USERNAME..."
-
+    echo "Creating user $USERNAME..."
     adduser "$USERNAME"
-
 fi
 
 usermod -aG sudo "$USERNAME"
 
 USER_HOME="$(getent passwd "$USERNAME" | cut -d: -f6)"
 
-info "Username : $USERNAME"
-info "Home     : $USER_HOME"
+echo "Username : $USERNAME"
+echo "Home     : $USER_HOME"
+echo "Build dir: $BUILDDIR"
 
 # ------------------------------------------------------------
-# Clean old Debian 12 repositories
+# Repair interrupted package configuration
 # ------------------------------------------------------------
 
-print_section "Cleaning old Debian 12 repositories"
+echo
+echo "============================================================"
+echo " Checking package state"
+echo "============================================================"
 
-# Old Guideos repository used by the previous installer.
-# Debian 13 now provides fastfetch directly, so this repository
-# is no longer required.
+dpkg --configure -a || true
+
+# ------------------------------------------------------------
+# Remove obsolete Debian 12 third-party repositories
+# ------------------------------------------------------------
+
+echo
+echo "============================================================"
+echo " Cleaning obsolete repositories"
+echo "============================================================"
+
+# Old Guideos Debian 12 repository.
+# Fastfetch is available directly from Debian 13, so this
+# third-party repository is no longer required.
 
 OLD_GUIDEOS_PATTERN="download.opensuse.org/repositories/home:/guideos/Debian_12"
 
 while IFS= read -r file; do
-
     if [[ -n "$file" && -f "$file" ]]; then
-
-        info "Removing old Guideos repository from:"
-        echo "  $file"
+        echo "Removing old Guideos entries from: $file"
 
         sed -i "\|$OLD_GUIDEOS_PATTERN|d" "$file"
-
     fi
-
 done < <(
-    grep -RIl "$OLD_GUIDEOS_PATTERN" \
+    grep -RIl \
+        "$OLD_GUIDEOS_PATTERN" \
         /etc/apt/sources.list \
         /etc/apt/sources.list.d \
         2>/dev/null || true
 )
 
-# Remove empty old repository files where appropriate.
-
+# Remove empty source-list files left behind.
 find /etc/apt/sources.list.d \
     -maxdepth 1 \
     -type f \
@@ -167,7 +132,7 @@ find /etc/apt/sources.list.d \
     2>/dev/null || true
 
 # ------------------------------------------------------------
-# Clean old LibreWolf repository
+# Remove obsolete LibreWolf repository configuration
 # ------------------------------------------------------------
 
 rm -f \
@@ -178,60 +143,65 @@ rm -f \
     /etc/apt/trusted.gpg.d/librewolf.gpg
 
 # ------------------------------------------------------------
-# Remove old Syncthing configuration
+# Remove duplicate Debian repository file created by the
+# previous installer version.
 # ------------------------------------------------------------
 
 rm -f \
-    /etc/apt/sources.list.d/syncthing.list \
-    /etc/apt/keyrings/syncthing-archive-keyring.gpg
+    /etc/apt/sources.list.d/debian-trixie-extra.list
 
 # ------------------------------------------------------------
-# Remove old NVIDIA repository configuration
+# Debian repository notes
 # ------------------------------------------------------------
 
-# The installer does NOT install NVIDIA.
-#
-# We only remove known NVIDIA repository files that may have
-# been created by previous versions of the installer.
-#
-# Existing NVIDIA driver packages are NOT removed.
+echo
+echo "============================================================"
+echo " Checking Debian repositories"
+echo "============================================================"
 
-rm -f \
-    /etc/apt/sources.list.d/nvidia.list \
-    /etc/apt/sources.list.d/nvidia-d12.list \
-    /etc/apt/sources.list.d/cuda.list
+echo "Existing Debian repository configuration will be preserved."
+echo "The installer will NOT create duplicate Debian sources."
 
-# ------------------------------------------------------------
-# Configure Debian repositories
-# ------------------------------------------------------------
+# Add Trixie backports only if it does not already exist.
 
-print_section "Configuring Debian repositories"
+if grep -Rqs \
+    "trixie-backports" \
+    /etc/apt/sources.list \
+    /etc/apt/sources.list.d \
+    2>/dev/null; then
 
-# Debian 13 needs these components for non-free firmware,
-# optional software and future manual NVIDIA management.
+    echo "Trixie backports repository already configured."
 
-cat > /etc/apt/sources.list.d/debian-trixie-extra.list <<EOF
-deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
-deb http://deb.debian.org/debian trixie-updates main contrib non-free non-free-firmware
-deb http://security.debian.org/debian-security trixie-security main contrib non-free non-free-firmware
+else
+
+    echo "Adding Trixie backports repository..."
+
+    cat > /etc/apt/sources.list.d/debian-trixie-backports.list <<EOF
 deb http://deb.debian.org/debian trixie-backports main contrib non-free non-free-firmware
 EOF
 
+fi
+
 # ------------------------------------------------------------
-# Initial package update
+# System update
 # ------------------------------------------------------------
 
-print_section "Updating Debian"
+echo
+echo "============================================================"
+echo " Updating Debian"
+echo "============================================================"
 
 apt-get update
-
 apt-get full-upgrade -y
 
 # ------------------------------------------------------------
 # Basic system configuration
 # ------------------------------------------------------------
 
-print_section "Configuring system"
+echo
+echo "============================================================"
+echo " Configuring system"
+echo "============================================================"
 
 hostnamectl set-hostname "$HOSTNAME"
 
@@ -241,17 +211,18 @@ timedatectl set-timezone "$TIMEZONE"
 # Install basic packages
 # ------------------------------------------------------------
 
-print_section "Installing Debian packages"
+echo
+echo "============================================================"
+echo " Installing Debian packages"
+echo "============================================================"
 
 apt-get install -y \
-    apt-transport-https \
     ca-certificates \
     curl \
     wget \
     gnupg \
     gpg \
     lsb-release \
-    software-properties-common \
     extrepo \
     nala \
     sudo \
@@ -292,17 +263,23 @@ apt-get install -y \
     fonts-font-awesome \
     kitty \
     neovim \
-    python3-neovim \
+    python3-pynvim \
     cmatrix \
     diodon \
     vim \
     hollywood \
     fastfetch \
     chromium \
-    barrier \
     timeshift
 
-# Stacer is currently in Trixie Backports.
+# ------------------------------------------------------------
+# Stacer
+# ------------------------------------------------------------
+
+echo
+echo "============================================================"
+echo " Installing Stacer"
+echo "============================================================"
 
 apt-get install -y -t trixie-backports stacer
 
@@ -310,13 +287,15 @@ apt-get install -y -t trixie-backports stacer
 # Firewall
 # ------------------------------------------------------------
 
-print_section "Configuring UFW"
+echo
+echo "============================================================"
+echo " Configuring UFW"
+echo "============================================================"
 
 ufw default deny incoming
 ufw default allow outgoing
 
 # SSH
-
 ufw allow 22/tcp
 
 ufw --force enable
@@ -325,7 +304,10 @@ ufw --force enable
 # Fail2ban
 # ------------------------------------------------------------
 
-print_section "Configuring Fail2ban"
+echo
+echo "============================================================"
+echo " Configuring Fail2ban"
+echo "============================================================"
 
 systemctl enable fail2ban
 systemctl restart fail2ban
@@ -334,7 +316,10 @@ systemctl restart fail2ban
 # Create user directories
 # ------------------------------------------------------------
 
-print_section "Creating user directories"
+echo
+echo "============================================================"
+echo " Creating user directories"
+echo "============================================================"
 
 mkdir -p "$USER_HOME/.config"
 mkdir -p "$USER_HOME/.fonts"
@@ -346,51 +331,31 @@ mkdir -p "$USER_HOME/Pictures/bg"
 # Copy configuration files
 # ------------------------------------------------------------
 
-print_section "Installing configuration files"
+echo
+echo "============================================================"
+echo " Installing configuration files"
+echo "============================================================"
 
 if [[ -d "$BUILDDIR/dotconfig" ]]; then
-
-    info "Copying dotconfig..."
-
-    cp -a "$BUILDDIR/dotconfig/." \
-        "$USER_HOME/.config/"
-
+    cp -a "$BUILDDIR/dotconfig/." "$USER_HOME/.config/"
 fi
 
 if [[ -f "$BUILDDIR/bg/bg.jpg" ]]; then
-
-    info "Copying wallpaper..."
-
     cp "$BUILDDIR/bg/bg.jpg" \
         "$USER_HOME/Pictures/bg/bg.jpg"
-
 fi
 
 if [[ -d "$BUILDDIR/fonts" ]]; then
-
-    info "Copying fonts..."
-
-    cp -a "$BUILDDIR/fonts/." \
-        "$USER_HOME/.fonts/"
-
+    cp -a "$BUILDDIR/fonts/." "$USER_HOME/.fonts/"
 fi
 
 if [[ -d "$BUILDDIR/themes" ]]; then
-
-    info "Copying themes..."
-
-    cp -a "$BUILDDIR/themes/." \
-        "$USER_HOME/.themes/"
-
+    cp -a "$BUILDDIR/themes/." "$USER_HOME/.themes/"
 fi
 
 if [[ -f "$BUILDDIR/user-dirs.dirs" ]]; then
-
-    info "Copying user directories configuration..."
-
     cp "$BUILDDIR/user-dirs.dirs" \
         "$USER_HOME/.config/user-dirs.dirs"
-
 fi
 
 # ------------------------------------------------------------
@@ -403,15 +368,21 @@ chown -R "$USERNAME:$USERNAME" "$USER_HOME"
 # Refresh fonts
 # ------------------------------------------------------------
 
-print_section "Updating fonts"
+echo
+echo "============================================================"
+echo " Updating fonts"
+echo "============================================================"
 
-runuser -u "$USERNAME" -- fc-cache -f
+runuser -u "$USERNAME" -- fc-cache -f || true
 
 # ------------------------------------------------------------
-# Remove unwanted Debian / GNOME packages
+# Remove unwanted Debian/GNOME packages
 # ------------------------------------------------------------
 
-print_section "Removing unwanted packages"
+echo
+echo "============================================================"
+echo " Removing unwanted packages"
+echo "============================================================"
 
 apt-get purge -y \
     'libreoffice*' \
@@ -457,30 +428,40 @@ apt-get autoremove -y
 # Syncthing repository
 # ------------------------------------------------------------
 
-print_section "Installing Syncthing"
+echo
+echo "============================================================"
+echo " Installing Syncthing"
+echo "============================================================"
 
 mkdir -p /etc/apt/keyrings
+
+# Remove any previous Syncthing source/key so that the current
+# official configuration is always used.
+
+rm -f \
+    /etc/apt/sources.list.d/syncthing.list \
+    /etc/apt/sources.list.d/syncthing.sources \
+    /etc/apt/keyrings/syncthing-archive-keyring.gpg
 
 curl -L \
     -o /etc/apt/keyrings/syncthing-archive-keyring.gpg \
     https://syncthing.net/release-key.gpg
-
-chmod 644 \
-    /etc/apt/keyrings/syncthing-archive-keyring.gpg
 
 cat > /etc/apt/sources.list.d/syncthing.list <<EOF
 deb [signed-by=/etc/apt/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable-v2
 EOF
 
 apt-get update
-
 apt-get install -y syncthing
 
 # ------------------------------------------------------------
 # Enable Syncthing for user
 # ------------------------------------------------------------
 
-print_section "Configuring Syncthing"
+echo
+echo "============================================================"
+echo " Configuring Syncthing"
+echo "============================================================"
 
 loginctl enable-linger "$USERNAME" || true
 
@@ -492,35 +473,28 @@ runuser -u "$USERNAME" -- \
 # LibreWolf
 # ------------------------------------------------------------
 
-print_section "Installing LibreWolf"
+echo
+echo "============================================================"
+echo " Installing LibreWolf"
+echo "============================================================"
 
-# LibreWolf moved away from the old deb.librewolf.net repository.
-# extrepo is now the recommended Debian installation method.
-
-extrepo disable librewolf 2>/dev/null || true
-
-rm -f \
-    /etc/apt/sources.list.d/librewolf.list \
-    /etc/apt/sources.list.d/librewolf.sources \
-    /etc/apt/keyrings/librewolf.gpg \
-    /etc/apt/preferences.d/librewolf.pref \
-    /etc/apt/trusted.gpg.d/librewolf.gpg
-
-apt-get update
-
-apt-get install -y extrepo
+if ! command -v extrepo >/dev/null 2>&1; then
+    apt-get install -y extrepo
+fi
 
 extrepo enable librewolf
 
 apt-get update
-
 apt-get install -y librewolf
 
 # ------------------------------------------------------------
 # Brave Browser
 # ------------------------------------------------------------
 
-print_section "Installing Brave Browser"
+echo
+echo "============================================================"
+echo " Installing Brave Browser"
+echo "============================================================"
 
 mkdir -p /usr/share/keyrings
 
@@ -528,22 +502,21 @@ curl -fsSLo \
     /usr/share/keyrings/brave-browser-archive-keyring.gpg \
     https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
 
-chmod 644 \
-    /usr/share/keyrings/brave-browser-archive-keyring.gpg
-
 cat > /etc/apt/sources.list.d/brave-browser-release.list <<EOF
 deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main
 EOF
 
 apt-get update
-
 apt-get install -y brave-browser
 
 # ------------------------------------------------------------
 # Zed editor
 # ------------------------------------------------------------
 
-print_section "Installing Zed"
+echo
+echo "============================================================"
+echo " Installing Zed"
+echo "============================================================"
 
 if [[ ! -x "$USER_HOME/.local/bin/zed" ]]; then
 
@@ -552,7 +525,7 @@ if [[ ! -x "$USER_HOME/.local/bin/zed" ]]; then
 
 else
 
-    info "Zed is already installed."
+    echo "Zed already installed."
 
 fi
 
@@ -560,7 +533,10 @@ fi
 # Flatpak / Flathub
 # ------------------------------------------------------------
 
-print_section "Configuring Flatpak"
+echo
+echo "============================================================"
+echo " Configuring Flatpak"
+echo "============================================================"
 
 flatpak remote-add \
     --if-not-exists \
@@ -568,55 +544,63 @@ flatpak remote-add \
     https://flathub.org/repo/flathub.flatpakrepo
 
 # ------------------------------------------------------------
+# Flatpak helper
+# ------------------------------------------------------------
+
+install_flatpak()
+{
+    APP_ID="$1"
+
+    echo
+    echo "Installing Flatpak: $APP_ID"
+
+    if flatpak info "$APP_ID" >/dev/null 2>&1; then
+        echo "Already installed: $APP_ID"
+        return 0
+    fi
+
+    if flatpak install -y --system flathub "$APP_ID"; then
+        echo "Installed: $APP_ID"
+    else
+        echo "WARNING: Could not install Flatpak: $APP_ID"
+        echo "Continuing with the installer..."
+    fi
+}
+
+# ------------------------------------------------------------
 # Flatpak applications
 # ------------------------------------------------------------
 
-print_section "Installing Flatpak applications"
+echo
+echo "============================================================"
+echo " Installing Flatpak applications"
+echo "============================================================"
 
-flatpak install -y --system flathub \
-    com.github.IsmaelMartinez.teams_for_linux
+install_flatpak "com.github.IsmaelMartinez.teams_for_linux"
+install_flatpak "io.github.realmazharhussain.GdmSettings"
+install_flatpak "com.rtosta.zapzap"
+install_flatpak "com.mastermindzh.tidal-hifi"
+install_flatpak "hu.irl.cameractrls"
+install_flatpak "us.zoom.Zoom"
+install_flatpak "org.kde.digikam"
+install_flatpak "com.github.PintaProject.Pinta"
+install_flatpak "md.obsidian.Obsidian"
+install_flatpak "org.bleachbit.BleachBit"
+install_flatpak "com.rustdesk.RustDesk"
+install_flatpak "com.simplenote.Simplenote"
 
-flatpak install -y --system flathub \
-    io.github.realmazharhussain.GdmSettings
-
-flatpak install -y --system flathub \
-    com.rtosta.zapzap
-
-flatpak install -y --system flathub \
-    com.mastermindzh.tidal-hifi
-
-flatpak install -y --system flathub \
-    hu.irl.cameractrls
-
-flatpak install -y --system flathub \
-    us.zoom.Zoom
-
-flatpak install -y --system flathub \
-    org.kde.digikam
-
-flatpak install -y --system flathub \
-    com.github.PintaProject.Pinta
-
-flatpak install -y --system flathub \
-    md.obsidian.Obsidian
-
-flatpak install -y --system flathub \
-    io.gitlab.librewolf-community
-
-flatpak install -y --system flathub \
-    org.bleachbit.BleachBit
-
-flatpak install -y --system flathub \
-    com.rustdesk.RustDesk
-
-flatpak install -y --system flathub \
-    com.simplenote.Simplenote
+# LibreWolf is intentionally NOT installed as a Flatpak.
+# It is installed above using the official LibreWolf Debian
+# repository through extrepo.
 
 # ------------------------------------------------------------
 # GNOME extension installation
 # ------------------------------------------------------------
 
-print_section "Installing GNOME extensions"
+echo
+echo "============================================================"
+echo " Installing GNOME extensions"
+echo "============================================================"
 
 install_extension()
 {
@@ -624,7 +608,7 @@ install_extension()
 
     if [[ -f "$BUILDDIR/$EXTENSION" ]]; then
 
-        info "Installing $EXTENSION"
+        echo "Installing $EXTENSION"
 
         runuser -u "$USERNAME" -- \
             gnome-extensions install \
@@ -634,7 +618,7 @@ install_extension()
 
     else
 
-        warning "Extension not found: $EXTENSION"
+        echo "Extension not found: $EXTENSION"
 
     fi
 }
@@ -650,7 +634,10 @@ install_extension "unblank@sun.wxg@gmail.com.zip"
 # Enable GNOME extensions
 # ------------------------------------------------------------
 
-print_section "Enabling GNOME extensions"
+echo
+echo "============================================================"
+echo " Enabling GNOME extensions"
+echo "============================================================"
 
 enable_extension()
 {
@@ -673,7 +660,10 @@ enable_extension "user-theme@gnome-shell-extensions.gcampax.github.com"
 # GNOME configuration
 # ------------------------------------------------------------
 
-print_section "Configuring GNOME"
+echo
+echo "============================================================"
+echo " Configuring GNOME"
+echo "============================================================"
 
 if [[ -f "$BUILDDIR/gnome/gnome-settings.ini" ]]; then
 
@@ -718,8 +708,7 @@ runuser -u "$USERNAME" -- \
         'io.atom.Atom.desktop',
         'com.mastermindzh.tidal-hifi.desktop',
         'io.github.mimbrero.WhatsAppDesktop.desktop'
-    ]" \
-    || true
+    ]" || true
 
 # ------------------------------------------------------------
 # Disable GNOME animations
@@ -736,7 +725,10 @@ runuser -u "$USERNAME" -- \
 # WirePlumber
 # ------------------------------------------------------------
 
-print_section "Configuring WirePlumber"
+echo
+echo "============================================================"
+echo " Configuring WirePlumber"
+echo "============================================================"
 
 runuser -u "$USERNAME" -- \
     systemctl --user enable wireplumber.service \
@@ -758,11 +750,12 @@ fi
 # Custom scripts
 # ------------------------------------------------------------
 
-print_section "Running custom scripts"
+echo
+echo "============================================================"
+echo " Running custom scripts"
+echo "============================================================"
 
 if [[ -f "$BUILDDIR/scripts/setup.sh" ]]; then
-
-    info "Running scripts/setup.sh"
 
     chmod +x "$BUILDDIR/scripts/setup.sh"
 
@@ -772,8 +765,6 @@ fi
 
 if [[ -f "$BUILDDIR/scripts/usenala" ]]; then
 
-    info "Running scripts/usenala"
-
     chmod +x "$BUILDDIR/scripts/usenala"
 
     bash "$BUILDDIR/scripts/usenala"
@@ -781,43 +772,26 @@ if [[ -f "$BUILDDIR/scripts/usenala" ]]; then
 fi
 
 # ------------------------------------------------------------
-# NVIDIA
+# Final package update
 # ------------------------------------------------------------
 
-print_section "NVIDIA"
+echo
+echo "============================================================"
+echo " Final package update"
+echo "============================================================"
 
-if [[ "$INSTALL_NVIDIA" == "true" ]]; then
+apt-get update
 
-    warning "NVIDIA installation has been requested."
-
-    warning "This is intentionally disabled in this version."
-
-else
-
-    info "NVIDIA installation/update is disabled."
-
-    if lspci 2>/dev/null | grep -qi nvidia; then
-
-        info "NVIDIA hardware detected."
-
-        echo
-        echo "NVIDIA will NOT be installed or changed by this script."
-        echo "We will handle NVIDIA manually after the base installation."
-        echo
-
-    else
-
-        info "No NVIDIA hardware detected."
-
-    fi
-
-fi
+apt-get full-upgrade -y
 
 # ------------------------------------------------------------
 # Final cleanup
 # ------------------------------------------------------------
 
-print_section "Cleaning up"
+echo
+echo "============================================================"
+echo " Cleaning up"
+echo "============================================================"
 
 apt-get autoremove -y
 apt-get autoclean -y
@@ -829,58 +803,46 @@ apt-get autoclean -y
 chown -R "$USERNAME:$USERNAME" "$USER_HOME"
 
 # ------------------------------------------------------------
-# Final repository check
+# NVIDIA notice
 # ------------------------------------------------------------
 
-print_section "Checking APT repositories"
+echo
+echo "============================================================"
+echo " NVIDIA"
+echo "============================================================"
 
-apt-get update
-
-# ------------------------------------------------------------
-# Display NVIDIA information
-# ------------------------------------------------------------
-
-print_section "NVIDIA status"
-
-if lspci 2>/dev/null | grep -qi nvidia; then
-
-    echo "NVIDIA hardware:"
-    lspci | grep -i nvidia || true
-
-    echo
-    echo "Installed NVIDIA packages:"
-    dpkg -l 2>/dev/null | grep -i nvidia || true
-
-    echo
-    echo "NVIDIA driver status:"
-    if command -v nvidia-smi >/dev/null 2>&1; then
-        nvidia-smi || true
-    else
-        echo "nvidia-smi is not installed."
-    fi
-
-else
-
-    echo "No NVIDIA hardware detected."
-
-fi
+echo "NVIDIA installation/configuration was intentionally skipped."
+echo "The installer does not install, remove, or modify NVIDIA drivers."
+echo "NVIDIA can be configured manually after the base system is complete."
 
 # ------------------------------------------------------------
 # Finished
 # ------------------------------------------------------------
 
-print_section "Debian 13 setup complete"
-
+echo
+echo "============================================================"
+echo " Debian 13 setup complete"
+echo "============================================================"
+echo
 echo "Hostname : $HOSTNAME"
 echo "User     : $USERNAME"
 echo "Debian   : 13 (Trixie)"
 echo
-echo "NVIDIA   : NOT managed by this installer"
-echo
-echo "The system will reboot in 10 seconds."
-echo "Press Ctrl+C to cancel."
+echo "NVIDIA   : untouched"
 echo
 
-sleep 10
+if [[ "$REBOOT_AT_END" == "true" ]]; then
 
-systemctl reboot
+    echo "The system will reboot in 10 seconds."
+    echo "Press Ctrl+C to cancel."
+    echo
+
+    sleep 10
+
+    systemctl reboot
+
+else
+
+    echo "Automatic reboot is disabled."
+
+fi
