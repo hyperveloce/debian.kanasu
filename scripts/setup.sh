@@ -1,4 +1,3 @@
-```bash
 #!/bin/bash
 # ============================================================
 # HyperVeloce / Kanasu# HyperVeloce / Kanasu
@@ -381,4 +380,3 @@ echo
 echo "~/.bashrc was NOT replaced or symlinked."
 echo "NVIDIA was NOT modified."
 echo
-```
