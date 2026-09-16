@@ -266,5 +266,120 @@ else
 
 fi
 
-# ---------------------
+# ------------------------------------------------------------
+# Kitty configuration
+# ------------------------------------------------------------
+
+echo
+echo "Configuring Kitty..."
+
+KITTY_SOURCE="$REPO_DIR/scripts/kitty"
+
+if [[ -d "$KITTY_SOURCE" ]]; then
+
+    mkdir -p "$KITTY_DIR"
+
+    for FILE in \
+        kitty.conf \
+        theme.conf \
+        current-theme.conf
+    do
+
+        if [[ -f "$KITTY_SOURCE/$FILE" ]]; then
+
+            ln -sfn \
+                "$KITTY_SOURCE/$FILE" \
+                "$KITTY_DIR/$FILE"
+
+            echo "Linked Kitty $FILE"
+
+        fi
+
+    done
+
+    chown -R "$USERNAME:$USERNAME" "$KITTY_DIR"
+
+else
+
+    echo "Kitty repository configuration not found."
+    echo "Skipping Kitty configuration."
+
+fi
+
+# ------------------------------------------------------------
+# Zed
+#
+# The current repository does not contain the old settings.conf
+# path, so don't manufacture or link a nonexistent file.
+# ------------------------------------------------------------
+
+echo
+echo "Checking Zed configuration..."
+
+if [[ -f "$REPO_DIR/zed/settings.json" ]]; then
+
+    mkdir -p "$CONFIG_DIR/zed"
+
+    ln -sfn \
+        "$REPO_DIR/zed/settings.json" \
+        "$CONFIG_DIR/zed/settings.json"
+
+    chown -R "$USERNAME:$USERNAME" "$CONFIG_DIR/zed"
+
+    echo "Zed settings linked."
+
+elif [[ -f "$REPO_DIR/scripts/zed/settings.json" ]]; then
+
+    mkdir -p "$CONFIG_DIR/zed"
+
+    ln -sfn \
+        "$REPO_DIR/scripts/zed/settings.json" \
+        "$CONFIG_DIR/zed/settings.json"
+
+    chown -R "$USERNAME:$USERNAME" "$CONFIG_DIR/zed"
+
+    echo "Zed settings linked."
+
+else
+
+    echo "No Zed settings file found."
+    echo "Skipping Zed configuration."
+
+fi
+
+# ------------------------------------------------------------
+# Ownership
+# ------------------------------------------------------------
+
+echo
+echo "Fixing ownership..."
+
+chown "$USERNAME:$USERNAME" "$BASHRC" 2>/dev/null || true
+chown -R "$USERNAME:$USERNAME" "$CONFIG_DIR" 2>/dev/null || true
+
+# ------------------------------------------------------------
+# NVIDIA
+# ------------------------------------------------------------
+
+echo
+echo "NVIDIA: untouched."
+
+# ------------------------------------------------------------
+# Done
+# ------------------------------------------------------------
+
+echo
+echo "============================================================"
+echo " User setup complete"
+echo "============================================================"
+echo
+echo "Configured:"
+echo "  - shell packages"
+echo "  - Bash helpers"
+echo "  - Starship (when config exists)"
+echo "  - Kitty configuration"
+echo
+echo "~/.bashrc was NOT replaced or symlinked."
+echo "NVIDIA was NOT modified."
+echo
 ```
