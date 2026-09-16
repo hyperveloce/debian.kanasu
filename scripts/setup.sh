@@ -3,157 +3,90 @@
 
 # ============================================================
 # HyperVeloce / Kanasu
-# Debian 13 (Trixie) user-tool setup
+# Debian 13 user-environment setup
+#
+# Safe to run repeatedly.
 #
 # IMPORTANT:
-#   - Safe to run repeatedly
 #   - NEVER replaces ~/.bashrc
-#   - NEVER creates a ~/.bashrc symlink
-#   - NEVER executes repository files as shell startup files
-#   - Does NOT install, remove, or configure NVIDIA
+#   - NEVER symlinks ~/.bashrc
+#   - NEVER sources repository scripts from ~/.bashrc
+#   - NEVER installs/configures NVIDIA
 #
-# The main install.sh already handles:
-#   - system packages
-#   - desktop configuration
-#   - ~/.config
-#   - Kitty
-#   - Neovim
-#   - Fastfetch
-#   - Zoxide
-#   - themes/fonts
-#   - GNOME configuration
-#
-# This script only handles a few shell utilities that are not
-# part of the main package list.
+# Responsibilities:
+#   - Install shell utilities
+#   - Configure Starship when a repo config exists
+#   - Configure autojump
+#   - Configure bat/batcat
+#   - Configure Kitty from the repo
+#   - Preserve the user's existing ~/.bashrc
 # ============================================================
 
 set -euo pipefail
 
 # ------------------------------------------------------------
-# Colours
+# Configuration
 # ------------------------------------------------------------
 
-RC='\e[0m'
-RED='\e[31m'
-YELLOW='\e[33m'
-GREEN='\e[32m'
-BLUE='\e[34m'
+USERNAME="${SUDO_USER:-kanasu}"
 
-info()
-{
-    echo -e "${BLUE}$1${RC}"
-}
+if [[ "$USERNAME" == "root" || -z "$USERNAME" ]]; then
+    USERNAME="kanasu"
+fi
 
-success()
-{
-    echo -e "${GREEN}$1${RC}"
-}
+if ! id "$USERNAME" >/dev/null 2>&1; then
+    echo "ERROR: User '$USERNAME' does not exist."
+    exit 1
+fi
 
-warning()
-{
-    echo -e "${YELLOW}$1${RC}"
-}
+USER_HOME="$(getent passwd "$USERNAME" | cut -d: -f6)"
 
-error()
-{
-    echo -e "${RED}$1${RC}"
-}
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+BASHRC="$USER_HOME/.bashrc"
+CONFIG_DIR="$USER_HOME/.config"
+KITTY_DIR="$CONFIG_DIR/kitty"
 
 # ------------------------------------------------------------
-# Must run as root
+# Root check
 # ------------------------------------------------------------
 
 if [[ "$EUID" -ne 0 ]]; then
-    error "This script must be run as root."
+    echo "ERROR: Run this script with sudo."
     echo
-    echo "Run:"
+    echo "Example:"
     echo "  sudo ./scripts/setup.sh"
     exit 1
 fi
 
 # ------------------------------------------------------------
-# Check Debian
+# Debian 13 check
 # ------------------------------------------------------------
-
-if [[ ! -f /etc/os-release ]]; then
-    error "Cannot determine operating system."
-    exit 1
-fi
 
 source /etc/os-release
 
-if [[ "${ID:-}" != "debian" ]]; then
-    error "This script is intended for Debian."
+if [[ "${ID:-}" != "debian" || "${VERSION_ID:-}" != "13" ]]; then
+    echo "ERROR: This script is intended for Debian 13 (Trixie)."
     echo "Detected: ${PRETTY_NAME:-unknown}"
     exit 1
 fi
 
-if [[ "${VERSION_ID:-}" != "13" ]]; then
-    error "This script is intended for Debian 13 (Trixie)."
-    echo "Detected: ${PRETTY_NAME:-unknown}"
-    exit 1
-fi
-
-# ------------------------------------------------------------
-# Determine target user
-# ------------------------------------------------------------
-
-TARGET_USER="${SUDO_USER:-}"
-
-if [[ -z "$TARGET_USER" || "$TARGET_USER" == "root" ]]; then
-    if id kanasu >/dev/null 2>&1; then
-        TARGET_USER="kanasu"
-    else
-        TARGET_USER="${USER:-}"
-    fi
-fi
-
-if [[ -z "$TARGET_USER" || "$TARGET_USER" == "root" ]]; then
-    error "Could not determine the normal desktop user."
-    exit 1
-fi
-
-if ! id "$TARGET_USER" >/dev/null 2>&1; then
-    error "User '$TARGET_USER' does not exist."
-    exit 1
-fi
-
-USER_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
-
-if [[ -z "$USER_HOME" || ! -d "$USER_HOME" ]]; then
-    error "Could not determine home directory for $TARGET_USER."
-    exit 1
-fi
-
-# ------------------------------------------------------------
-# Locate repository
-# ------------------------------------------------------------
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-
-# ------------------------------------------------------------
-# Header
-# ------------------------------------------------------------
-
 echo
 echo "============================================================"
-echo " HyperVeloce / Kanasu - shell tools"
+echo " HyperVeloce / Kanasu user setup"
 echo "============================================================"
 echo
-echo "Debian      : ${PRETTY_NAME:-unknown}"
-echo "User        : $TARGET_USER"
-echo "Home        : $USER_HOME"
-echo "Repository  : $REPO_DIR"
+echo "User       : $USERNAME"
+echo "Home       : $USER_HOME"
+echo "Repository : $REPO_DIR"
 echo
 
 # ------------------------------------------------------------
-# Install shell utilities
+# Install shell packages
 # ------------------------------------------------------------
 
-info "Installing shell utilities..."
-
-export DEBIAN_FRONTEND=noninteractive
+echo "Installing shell packages..."
 
 apt-get update
 
@@ -165,140 +98,173 @@ apt-get install -y \
     starship \
     tar
 
-success "Shell utilities installed."
+echo "Shell packages installed."
 
 # ------------------------------------------------------------
-# Check .bashrc
+# SAFETY CHECK
 #
-# We deliberately DO NOT edit it.
-# We only detect the old dangerous symlink and stop.
+# ~/.bashrc must never point at scripts/.bashrc.
 # ------------------------------------------------------------
-
-BASHRC="$USER_HOME/.bashrc"
 
 echo
-info "Checking ~/.bashrc..."
+echo "Checking ~/.bashrc..."
 
 if [[ -L "$BASHRC" ]]; then
 
-    BASHRC_TARGET="$(readlink -f "$BASHRC" 2>/dev/null || true)"
+    TARGET="$(readlink -f "$BASHRC" 2>/dev/null || true)"
 
-    warning "~/.bashrc is currently a symbolic link:"
-    echo "  $BASHRC -> $BASHRC_TARGET"
+    echo "WARNING: ~/.bashrc is a symlink:"
+    echo "  $BASHRC -> $TARGET"
 
-    if [[ "$BASHRC_TARGET" == "$REPO_DIR/scripts/.bashrc" ]]; then
-        error "DANGEROUS configuration detected."
+    if [[ "$TARGET" == "$REPO_DIR/scripts/.bashrc" ]]; then
         echo
-        echo "~/.bashrc points to scripts/.bashrc."
-        echo "The repository file must never be used as ~/.bashrc."
+        echo "ERROR: ~/.bashrc points to the installer."
+        echo "This would cause recursive Bash execution."
         echo
-        echo "This script will NOT modify it automatically."
-        echo "Restore ~/.bashrc before continuing."
-        echo
+        echo "The script will stop without changing ~/.bashrc."
         exit 1
     fi
 
-    warning "Existing ~/.bashrc symlink detected."
-    warning "Leaving it unchanged."
-
 elif [[ -f "$BASHRC" ]]; then
 
-    success "~/.bashrc is a normal file."
-    
+    echo "OK: ~/.bashrc is a normal file."
+
 elif [[ ! -e "$BASHRC" ]]; then
 
-    warning "~/.bashrc does not exist."
+    echo "~/.bashrc does not exist."
+    echo "Creating it from /etc/skel/.bashrc..."
 
     if [[ -f /etc/skel/.bashrc ]]; then
         cp /etc/skel/.bashrc "$BASHRC"
-        chown "$TARGET_USER:$TARGET_USER" "$BASHRC"
-        chmod 644 "$BASHRC"
-        success "Created ~/.bashrc from /etc/skel/.bashrc."
     else
         touch "$BASHRC"
-        chown "$TARGET_USER:$TARGET_USER" "$BASHRC"
-        chmod 644 "$BASHRC"
-        warning "Created an empty ~/.bashrc."
     fi
+
+    chown "$USERNAME:$USERNAME" "$BASHRC"
+    chmod 644 "$BASHRC"
+
+    echo "~/.bashrc created."
 
 fi
 
 # ------------------------------------------------------------
-# Check old accidental repository file
+# Remove old accidental scripts/.bashrc
 #
-# Do not use it.
-# Do not link it.
-# Do not source it.
+# This file was previously an installer accidentally named
+# .bashrc. It must never be used as a shell startup file.
+#
+# Rename rather than delete the first time.
 # ------------------------------------------------------------
 
 LEGACY_BASHRC="$REPO_DIR/scripts/.bashrc"
+LEGACY_BACKUP="$REPO_DIR/scripts/.bashrc.installer"
 
 if [[ -f "$LEGACY_BASHRC" ]]; then
 
-    if grep -q 'configure_bash' "$LEGACY_BASHRC" 2>/dev/null; then
-        warning "Found legacy scripts/.bashrc installer file."
-        warning "It will NOT be used as a shell configuration."
+    if grep -q "configure_bash" "$LEGACY_BASHRC" 2>/dev/null; then
+
+        echo
+        echo "Found legacy installer named scripts/.bashrc."
+
+        if [[ ! -e "$LEGACY_BACKUP" ]]; then
+            mv "$LEGACY_BASHRC" "$LEGACY_BACKUP"
+            echo "Moved:"
+            echo "  scripts/.bashrc"
+            echo "to:"
+            echo "  scripts/.bashrc.installer"
+        else
+            rm -f "$LEGACY_BASHRC"
+            echo "Removed duplicate legacy scripts/.bashrc."
+        fi
+
     fi
 
 fi
 
 # ------------------------------------------------------------
-# Optional Starship configuration
+# Bash helper configuration
 #
-# The main installer owns ~/.config.
-# We only report whether a Starship config exists.
+# We append ONE managed block only if it doesn't already exist.
+#
+# We do NOT overwrite the user's .bashrc.
+# ------------------------------------------------------------
+
+BASH_MARKER="# >>> HyperVeloce Kanasu managed setup >>>"
+
+if [[ -f "$BASHRC" && ! -L "$BASHRC" ]]; then
+
+    if ! grep -Fq "$BASH_MARKER" "$BASHRC"; then
+
+        cat >> "$BASHRC" <<'EOF'
+
+# >>> HyperVeloce Kanasu managed setup >>>
+
+# Starship prompt
+if command -v starship >/dev/null 2>&1; then
+    eval "$(starship init bash)"
+fi
+
+# Autojump
+if [[ -f /usr/share/autojump/autojump.sh ]]; then
+    source /usr/share/autojump/autojump.sh
+fi
+
+# Debian installs bat as batcat.
+if command -v batcat >/dev/null 2>&1 && ! command -v bat >/dev/null 2>&1; then
+    alias bat='batcat'
+fi
+
+# <<< HyperVeloce Kanasu managed setup <<<
+
+EOF
+
+        echo "Bash helpers added to ~/.bashrc."
+
+    else
+
+        echo "Bash helpers already configured."
+
+    fi
+
+fi
+
+# ------------------------------------------------------------
+# Starship configuration
+#
+# Only link a real configuration file.
 # ------------------------------------------------------------
 
 echo
-info "Checking Starship configuration..."
+echo "Checking Starship configuration..."
 
-STARSHIP_CONFIG=""
+STARSHIP_SOURCE=""
 
-if [[ -f "$REPO_DIR/starship.toml" ]]; then
-    STARSHIP_CONFIG="$REPO_DIR/starship.toml"
-elif [[ -f "$REPO_DIR/${HOSTNAME}-starship.toml" ]]; then
-    STARSHIP_CONFIG="$REPO_DIR/${HOSTNAME}-starship.toml"
-elif [[ -f "$REPO_DIR/scripts/starship.toml" ]]; then
-    STARSHIP_CONFIG="$REPO_DIR/scripts/starship.toml"
-elif [[ -f "$REPO_DIR/scripts/${HOSTNAME}-starship.toml" ]]; then
-    STARSHIP_CONFIG="$REPO_DIR/scripts/${HOSTNAME}-starship.toml"
-fi
+for candidate in \
+    "$REPO_DIR/starship.toml" \
+    "$REPO_DIR/$HOSTNAME-starship.toml" \
+    "$REPO_DIR/scripts/starship.toml" \
+    "$REPO_DIR/scripts/$HOSTNAME-starship.toml"
+do
+    if [[ -f "$candidate" ]]; then
+        STARSHIP_SOURCE="$candidate"
+        break
+    fi
+done
 
-if [[ -n "$STARSHIP_CONFIG" ]]; then
-    echo "Starship configuration found:"
-    echo "  $STARSHIP_CONFIG"
-    echo
-    echo "Configuration linking is left to the main installer."
+mkdir -p "$CONFIG_DIR"
+
+if [[ -n "$STARSHIP_SOURCE" ]]; then
+
+    ln -sfn "$STARSHIP_SOURCE" "$CONFIG_DIR/starship.toml"
+    echo "Starship configuration linked:"
+    echo "  $STARSHIP_SOURCE"
+
 else
-    warning "No repository Starship configuration found."
-    warning "Starship will use its default configuration."
+
+    echo "No repository Starship configuration found."
+    echo "Starship will use its default configuration."
+
 fi
 
-# ------------------------------------------------------------
-# Final ownership check
-# ------------------------------------------------------------
-
-chown "$TARGET_USER:$TARGET_USER" "$BASHRC" 2>/dev/null || true
-
-# ------------------------------------------------------------
-# Final status
-# ------------------------------------------------------------
-
-echo
-echo "============================================================"
-success "Shell setup complete."
-echo "============================================================"
-echo
-echo "Installed:"
-echo "  autojump"
-echo "  bash-completion"
-echo "  bat"
-echo "  neovim"
-echo "  starship"
-echo "  tar"
-echo
-echo "NVIDIA: untouched"
-echo
-echo "~/.bashrc: NOT replaced or symlinked"
-echo
+# ---------------------
 ```
