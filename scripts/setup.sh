@@ -1,7 +1,4 @@
 ```bash
-#!/bin/bash
-
-# ============================================================
 # HyperVeloce / Kanasu
 # Debian 13 user-environment setup
 #
