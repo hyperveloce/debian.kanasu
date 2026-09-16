@@ -1,5 +1,7 @@
 ```bash
-# HyperVeloce / Kanasu
+#!/bin/bash
+# ============================================================
+# HyperVeloce / Kanasu# HyperVeloce / Kanasu
 # Debian 13 user-environment setup
 #
 # Safe to run repeatedly.
